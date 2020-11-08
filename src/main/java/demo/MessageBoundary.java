@@ -4,8 +4,24 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-// {"message":"hello", "creationDate":date}
+//{
+// "id":"1",
+// "message":"hello", 
+// "creationDate":"yyyy-MM-ddTHH:mm:ss.mmm+Z", 
+// "important":true,
+// "number":12,
+// "decimalValue":12.1,
+// "name":{
+//   "firstName":"Jane", "lastName":"Smith"
+//  },
+//  "priority":"MEDIUM",
+//  "moreDetails":{
+//    "sampleAttribute":{"b":{"c":{}}}
+//  }
+//}
+
 public class MessageBoundary {
+	private String id;
 	private String message;
 	private Date creationDate;
 	private Boolean important;
@@ -18,6 +34,7 @@ public class MessageBoundary {
 	public MessageBoundary() {
 //		super();
 		// this.message = "default message";
+		this.id = "1"; // TODO initialize id when storing messages in the database
 		this.creationDate = new Date();
 		this.important = false;
 		this.number = 0L;
@@ -37,6 +54,14 @@ public class MessageBoundary {
 		this.message = message;
 	}
 
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 	public String getMessage() {
 		return message;
 	}
@@ -101,5 +126,13 @@ public class MessageBoundary {
 		this.moreDetails = moreDetails;
 	}
 
+	@Override
+	public String toString() {
+		return "MessageBoundary [id=" + id + ", message=" + message + ", creationDate=" + creationDate + ", important="
+				+ important + ", number=" + number + ", decimalValue=" + decimalValue + ", name=" + name + ", priority="
+				+ priority + ", moreDetails=" + moreDetails + "]";
+	}
+
+	
 	
 }
