@@ -1,5 +1,6 @@
 package demo;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.springframework.http.MediaType;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AdminApi {
+public class AdminController {
 
 	
 	// Delete All Users API
@@ -34,21 +35,22 @@ public class AdminApi {
 			@PathVariable("adminEmail") String adminEmail){
 		System.err.println("deleted All Operations By: " + adminEmail);
 	}
-	/*
+
 	// Export All Users API (Example Create 7 users and return)
 	@RequestMapping(method = RequestMethod.GET,
 			path = "/admin/users/{adminSpace}/{adminEmail}",
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ArrayList<UserBoundary> exportAllUsers(@PathVariable("adminSpace") String adminSpace,
+	public ArrayList<UsersBoundary> exportAllUsers(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail){
 		
-            ArrayList<UserBoundary> UsersResault = new ArrayList<UserBoundary>();
+            ArrayList<UsersBoundary> UsersResault = new ArrayList<UsersBoundary>();
             for (int i = 0; i < 7; i++) {
-            UsersResault.add(new UserBoundary(String.valueOf(i)));
+            UsersResault.add(new UsersBoundary());
 	
-		return UsersResault;
 	}
+			return UsersResault;
 	}
+		/*
 	// Export All Operations API (Example Create 7 users and return)
 	@RequestMapping(method = RequestMethod.GET,
 			path = "/admin/operations/{adminSpace}/{adminEmail}",
@@ -62,6 +64,7 @@ public class AdminApi {
 	
 		return OperationResault;
 	}
+		return OperationResault;
 	}
 	*/
 }
