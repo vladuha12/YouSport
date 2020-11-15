@@ -1,4 +1,4 @@
-package demo;
+package app.boundaries;
 
 public class LocationBoundary {
 	private String lat;

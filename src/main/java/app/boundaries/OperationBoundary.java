@@ -1,4 +1,4 @@
-package demo;
+package app.boundaries;
 
 import java.util.Date;
 import java.util.HashMap;

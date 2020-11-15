@@ -1,8 +1,8 @@
-package demo.util;
+package app.util;
 
 import org.springframework.stereotype.Component;
 
-import demo.AbstractPrinter;
+import app.AbstractPrinter;
 
 @Component
 public class Printer implements AbstractPrinter{

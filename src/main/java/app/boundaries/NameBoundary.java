@@ -1,4 +1,4 @@
-package demo;
+package app.boundaries;
 
 public class NameBoundary {
 	private String firstName;

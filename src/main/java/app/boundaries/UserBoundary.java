@@ -1,7 +1,9 @@
-package demo;
+package app.boundaries;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import app.UserRoles;
 
 public class UserBoundary {
 	private Map<String, Object> userId;

@@ -1,4 +1,4 @@
-package demo;
+package app;
 
 import javax.annotation.PostConstruct;
 
