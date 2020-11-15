@@ -99,8 +99,20 @@ public class MessageController {
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE,
-			path = "/hello")
+			path = "/hello/deleteallusers")
 	public void deleteAllMessages (){
+
+	}
+	
+	@RequestMapping(method = RequestMethod.DELETE,
+			path = "/hello/deleteallitems")
+	public void deleteAllItems (){
+
+	}
+	
+	@RequestMapping(method = RequestMethod.DELETE,
+			path = "/hello/deletealloperations")
+	public void deleteAllOperations (){
 
 	}
 }
