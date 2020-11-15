@@ -10,7 +10,7 @@ public class ItemBoundary {
 	private String type;
 	private Date creationDate;
 	private Boolean active;
-	private String createdBy;
+	private UserBoundary createdBy;
 	private LocationBoundary location;
 	private Map<String, Object> itemAttributes;
 	// add test
@@ -23,7 +23,7 @@ public class ItemBoundary {
 		this.active = true;
 		this.creationDate = new Date();
 
-		this.createdBy = "Should be changeed to userBoundrary"; // TODO: change to userBoundrary
+		this.createdBy = new UserBoundary();
 
 		this.location = new LocationBoundary();
 		this.itemAttributes = new HashMap<>();
@@ -36,8 +36,6 @@ public class ItemBoundary {
 		this();
 		this.itemId = new IdBoundary(itemId);
 	}
-
-
 
 	public IdBoundary getItemId() {
 		return itemId;
@@ -79,11 +77,11 @@ public class ItemBoundary {
 		this.active = active;
 	}
 
-	public String getCreatedBy() {
+	public UserBoundary getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(UserBoundary createdBy) {
 		this.createdBy = createdBy;
 	}
 

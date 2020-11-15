@@ -3,13 +3,13 @@ package demo;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UsersBoundary {
+public class UserBoundary {
 	private Map<String, Object> userId;
 	private UserRoles role;
 	private String username;
 	private String avatar;
 	
-	public UsersBoundary() {
+	public UserBoundary() {
 		this.userId = new HashMap<>(); // TODO initialize id when storing messages in the database
 		this.userId.put("space", "2021a.demo");
 		this.userId.put("email", "demo@maildomain.com");
