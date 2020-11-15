@@ -6,25 +6,25 @@ import java.util.Map;
 import app.UserRoles;
 
 public class UserBoundary {
-	private Map<String, Object> userId;
+	private IdBoundary userId;
 	private UserRoles role;
 	private String username;
 	private String avatar;
+	private String email;
 	
 	public UserBoundary() {
-		this.userId = new HashMap<>(); // TODO initialize id when storing messages in the database
-		this.userId.put("space", "2021a.demo");
-		this.userId.put("email", "demo@maildomain.com");
+		this.userId =  new IdBoundary();
 		this.role = UserRoles.PLAYER;
 		this.username = "Demo User";
 		this.avatar = "ooOO_()OOoo";
+		this.email = "test@test.com";
 	}
 	
-	public Map<String, Object> getUserId() {
+	public IdBoundary getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Map<String, Object> userId) {
+	public void setUserId(IdBoundary userId) {
 		this.userId = userId;
 	}
 
@@ -51,9 +51,18 @@ public class UserBoundary {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", role=" + role + ", username=" + username + ", avatar=" + avatar + "]";
+		return "UserBoundary [userId=" + userId + ", role=" + role + ", username=" + username + ", avatar=" + avatar
+				+ ", email=" + email + "]";
 	}
 }
