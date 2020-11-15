@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.boundaries.OperationBoundary;
 import app.boundaries.UserBoundary;
 
 @RestController
@@ -46,20 +47,17 @@ public class AdminController {
 		}
 		return UsersResault;
 	}
-	/*
-	 * // Export All Operations API (Example Create 7 users and return)
-	 * 
-	 * @RequestMapping(method = RequestMethod.GET, path =
-	 * "/admin/operations/{adminSpace}/{adminEmail}", produces =
-	 * MediaType.APPLICATION_JSON_VALUE) public ArrayList<OperationBoundary>
-	 * exportAllOperation(@PathVariable("adminSpace") String adminSpace,
-	 * 
-	 * @PathVariable("adminEmail") String adminEmail){
-	 * 
-	 * ArrayList<OperationBoundary> OperationResault = new
-	 * ArrayList<OperationBoundary>(); for (int i = 0; i < 7; i++) {
-	 * OperationResault.add(new OperationBoundary(String.valueOf(i)));
-	 * 
-	 * return OperationResault; } return OperationResault; }
-	 */
+	
+	// Export All Operations API (Example Create 7 users and return)
+	@RequestMapping(method = RequestMethod.GET, path = "/dts/admin/operations/{adminSpace}/{adminEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ArrayList<OperationBoundary> exportAllOperations(@PathVariable("adminSpace") String adminSpace,
+			@PathVariable("adminEmail") String adminEmail) {
+
+		ArrayList<OperationBoundary> OperationResault = new ArrayList<OperationBoundary>();
+		for (int i = 0; i < 7; i++) {
+			OperationResault.add(new OperationBoundary());
+
+		}
+		return OperationResault;
+	}
 }
