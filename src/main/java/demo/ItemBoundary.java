@@ -13,6 +13,7 @@ public class ItemBoundary {
 	private String createdBy;
 	private LocationBoundary location;
 	private Map<String, Object> itemAttributes;
+	// add test
 
 	public ItemBoundary() {
 
