@@ -1,4 +1,4 @@
-package app.controllers;
+package dts.controllers;
 
 import java.util.ArrayList;
 
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.boundaries.IdBoundary;
-import app.boundaries.ItemBoundary;
+import dts.boundaries.IdBoundary;
+import dts.boundaries.ItemBoundary;
 
 @RestController
 public class ItemController {

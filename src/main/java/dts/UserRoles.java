@@ -1,4 +1,4 @@
-package app;
+package dts;
 
 public enum UserRoles {
 	ADMIN, PLAYER;

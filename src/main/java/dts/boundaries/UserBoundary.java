@@ -1,9 +1,6 @@
-package app.boundaries;
+package dts.boundaries;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import app.UserRoles;
+import dts.UserRoles;
 
 public class UserBoundary {
 	private IdBoundary userId;
