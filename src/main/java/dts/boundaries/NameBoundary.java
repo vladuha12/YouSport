@@ -1,4 +1,4 @@
-package app.boundaries;
+package dts.boundaries;
 
 public class NameBoundary {
 	private String firstName;

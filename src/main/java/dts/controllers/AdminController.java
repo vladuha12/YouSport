@@ -1,4 +1,4 @@
-package app.controllers;
+package dts.controllers;
 
 import java.util.ArrayList;
 
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.boundaries.OperationBoundary;
-import app.boundaries.UserBoundary;
+import dts.boundaries.OperationBoundary;
+import dts.boundaries.UserBoundary;
 
 @RestController
 public class AdminController {
@@ -48,7 +48,7 @@ public class AdminController {
 		return UsersResault;
 	}
 	
-	// Export All Operations API (Example Create 7 users and return)
+	// Export All Operations API (Example Create 7 operations and return)
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/admin/operations/{adminSpace}/{adminEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ArrayList<OperationBoundary> exportAllOperations(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail) {
