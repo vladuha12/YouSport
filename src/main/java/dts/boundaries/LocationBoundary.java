@@ -1,4 +1,4 @@
-package app.boundaries;
+package dts.boundaries;
 
 public class LocationBoundary {
 	private String lat;

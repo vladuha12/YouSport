@@ -1,4 +1,4 @@
-package app.controllers;
+package dts.controllers;
 
 import java.util.ArrayList;
 
@@ -9,19 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.boundaries.IdBoundary;
-import app.boundaries.ItemBoundary;
+import dts.boundaries.IdBoundary;
+import dts.boundaries.ItemBoundary;
 
 @RestController
 public class ItemController {
-
-	@RequestMapping(method = RequestMethod.GET,
-			// path = "items/{userSpace}/{userEmail}/{itemSpace}/{itemId}",
-			path = "/dts/items/", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ItemBoundary item() {
-		return new ItemBoundary();
-
-	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary item(@PathVariable("userSpace") String userSpace, @PathVariable("userEmail") String userEmail,

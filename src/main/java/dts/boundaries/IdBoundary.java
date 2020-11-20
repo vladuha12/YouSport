@@ -1,4 +1,4 @@
-package app.boundaries;
+package dts.boundaries;
 
 import java.util.UUID;
 
