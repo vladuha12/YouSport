@@ -15,14 +15,6 @@ import dts.boundaries.ItemBoundary;
 @RestController
 public class ItemController {
 
-	@RequestMapping(method = RequestMethod.GET,
-			// path = "items/{userSpace}/{userEmail}/{itemSpace}/{itemId}",
-			path = "/dts/items/", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ItemBoundary item() {
-		return new ItemBoundary();
-
-	}
-
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary item(@PathVariable("userSpace") String userSpace, @PathVariable("userEmail") String userEmail,
 			@PathVariable("itemSpace") String itemSpace, @PathVariable("itemId") String itemId) {
