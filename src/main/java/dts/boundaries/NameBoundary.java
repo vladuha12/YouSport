@@ -29,5 +29,9 @@ public class NameBoundary {
 		this.lastName = lastName;
 	}
 	
+	@Override
+	public String toString() {
+		return this.firstName + "@" + this.lastName;
+	}
 	
 }
