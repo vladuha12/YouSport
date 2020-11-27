@@ -1,26 +1,23 @@
-package dts.boundaries;
+package dts.data;
 
-import dts.data.UserRole;
-
-public class UserBoundary {
-	private UserIdBoundary userId;
-	private String email;
+public class UserEntity {
+	private UserIdEntity userId;
 	private UserRole role;
 	private String username;
 	private String avatar;
 	
-	public UserBoundary() {
-		this.userId =  new UserIdBoundary();
+	public UserEntity() {
+		this.userId =  new UserIdEntity();
 		this.role = UserRole.PLAYER;
 		this.username = "Demo User";
 		this.avatar = "ooOO_()OOoo";
 	}
-	
-	public UserIdBoundary getUserId() {
+
+	public UserIdEntity getUserId() {
 		return userId;
 	}
 
-	public void setUserId(UserIdBoundary userId) {
+	public void setUserId(UserIdEntity userId) {
 		this.userId = userId;
 	}
 
@@ -46,14 +43,5 @@ public class UserBoundary {
 
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
-	}
-
-	public void setSpace(String space) {
-		this.userId.setSpace(space);		
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-		this.userId.setEmail(email);
 	}
 }
