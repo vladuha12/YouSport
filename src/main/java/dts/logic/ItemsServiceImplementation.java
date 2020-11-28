@@ -30,21 +30,27 @@ public class ItemsServiceImplementation implements ItemsService{
 	}
 	
 	@Override
-	public ItemBoundary Create(String managerSpace, String managerEmail, ItemBoundary newItem) {		
-		ItemEntity entity = this.itemConverter.toEntity(newItem);	
+	public ItemBoundary Create(String managerSpace, String managerEmail, ItemBoundary newItem) {			
+		if (this.itemStore.get(newItem.getItemId().getId()) == null) {
+			ItemEntity entity = this.itemConverter.toEntity(newItem);
+			this.itemStore.put(newItem.getItemId().getId(), entity);
 		
-		this.itemStore.put(newItem.getItemId().toString(), entity);
-		
-		return this.itemConverter.toBoundary(entity);
+			return this.itemConverter.toBoundary(entity);
+		}
+		else
+			return null;
 	}
 
 	@Override
 	public ItemBoundary update(String managerSpace, String managerEmail, String itemSpace, String itemId, ItemBoundary update) {
-		ItemEntity entity = this.itemConverter.toEntity(update);	
+		if (this.itemStore.get(itemId) != null) {
+			ItemEntity entity = this.itemConverter.toEntity(update);
+			this.itemStore.put(itemId, entity);
 		
-		this.itemStore.put(update.getItemId().toString(), entity);
-		
-		return this.itemConverter.toBoundary(entity);
+			return this.itemConverter.toBoundary(entity);
+		}
+		else
+			return null;
 	}
 
 	@Override
@@ -53,8 +59,11 @@ public class ItemsServiceImplementation implements ItemsService{
 	}
 
 	@Override
-	public ItemBoundary getSpecificItem(String userSpace, String userEmail, String itemSpace, String itemId) {		 
-		 return itemConverter.toBoundary(this.itemStore.get(itemId));			 
+	public ItemBoundary getSpecificItem(String userSpace, String userEmail, String itemSpace, String itemId) {	
+		if (this.itemStore.get(itemId) != null)
+		 return itemConverter.toBoundary(this.itemStore.get(itemId));
+		else
+			return null;
 	}
 
 	@Override

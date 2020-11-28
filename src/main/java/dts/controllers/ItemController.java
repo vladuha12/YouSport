@@ -47,7 +47,7 @@ public class ItemController {
 		return itemsHandler.Create(managerSpace, managerEmail, newItem);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, path = "/dts/items/{adminSpace}/{adminEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(method = RequestMethod.DELETE, path = "/dts/items/{adminSpace}/{adminEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public void clear(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail) {
 		itemsHandler.deleteAll(adminSpace, adminEmail);
