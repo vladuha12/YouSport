@@ -56,4 +56,5 @@ public class UserBoundary {
 		this.email = email;
 		this.userId.setEmail(email);
 	}
+
 }

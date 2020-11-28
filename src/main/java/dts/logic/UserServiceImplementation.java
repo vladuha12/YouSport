@@ -13,6 +13,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import dts.boundaries.UserBoundary;
 import dts.data.UserEntity;
+import dts.data.UserIdEntity;
 import dts.data.UserRole;
 
 @Service
@@ -21,6 +22,7 @@ public class UserServiceImplementation implements UsersService, CommandLineRunne
 	private String helperName;
 	private Map<String, UserEntity> usersStore;
 	private UserConverter userConverter;
+	private UserIdConverter userIdConverter;
 	private String delimiter = "$";
 
 	@Value("${spring.application.name:demoSpace}")
@@ -37,6 +39,11 @@ public class UserServiceImplementation implements UsersService, CommandLineRunne
 	public void setUserConverter(UserConverter userConverter) {
 		this.userConverter = userConverter;
 	}
+	
+	@Autowired
+	public void setUserIdConverter(UserIdConverter userIdConverter) {
+		this.userIdConverter = userIdConverter;
+	}
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -50,7 +57,6 @@ public class UserServiceImplementation implements UsersService, CommandLineRunne
 
 		// MOCKUP database store of the entity
 		String key = helperName + delimiter + userEntity.getUserId().getEmail();
-		System.err.println(key);
 		this.usersStore.put(key, userEntity);
 		return this.userConverter.toBoundary(userEntity);
 	}
@@ -68,6 +74,9 @@ public class UserServiceImplementation implements UsersService, CommandLineRunne
 	public UserBoundary updateUser(String userSpace, String userEmail, UserBoundary update) throws Exception {
 		String key = userSpace + delimiter + userEmail;
 		if (usersStore.containsKey(key)) {
+			UserEntity old = usersStore.get(key);
+			UserIdEntity idOld = old.getUserId();
+			update.setUserId(this.userIdConverter.toBoundary(idOld));
 			usersStore.put(key, this.userConverter.toEntity(update));
 			return this.userConverter.toBoundary(usersStore.get(key));
 		} else

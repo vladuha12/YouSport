@@ -9,7 +9,7 @@ import dts.data.UserEntity;
 public class UserConverter {
 
 	public UserEntity toEntity(UserBoundary newUser) {
-		UserIdConverter1 userIdConverter = new UserIdConverter1();
+		UserIdConverter userIdConverter = new UserIdConverter();
 		UserEntity entity = new UserEntity();
 
 		if (newUser.getUserId() != null)
@@ -25,7 +25,7 @@ public class UserConverter {
 	}
 
 	public UserBoundary toBoundary(UserEntity entity) {
-		UserIdConverter1 userIdConverter = new UserIdConverter1();
+		UserIdConverter userIdConverter = new UserIdConverter();
 		UserBoundary boundary = new UserBoundary();
 
 		if (entity.getUserId() != null)
