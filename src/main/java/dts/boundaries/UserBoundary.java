@@ -16,6 +16,17 @@ public class UserBoundary {
 		this.avatar = "ooOO_()OOoo";
 	}
 	
+	
+	public UserBoundary(UserIdBoundary userId, UserRole role, String username, String avatar, String email) {
+		super();
+		this.userId = userId;
+		this.role = role;
+		this.username = username;
+		this.avatar = avatar;
+		this.email = email;
+	}
+
+
 	public UserIdBoundary getUserId() {
 		return userId;
 	}
@@ -57,4 +68,8 @@ public class UserBoundary {
 		this.userId.setEmail(email);
 	}
 
+	@Override
+	public String toString() {
+		return this.userId + "&" + this.role.name() + "&" + this.username + "&" + this.avatar + "&" + this.email;
+	}
 }

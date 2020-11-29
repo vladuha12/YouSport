@@ -30,4 +30,9 @@ public class LocationBoundary {
 	public void setLan(String lan) {
 		this.lan = lan;
 	}
+	
+	@Override
+	public String toString() {
+		return this.lat + "@" + this.lan;
+	}
 }
