@@ -1,48 +1,40 @@
-package dts.boundaries;
+package dts.data;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
-public class OperationBoundary {
+import dts.boundaries.ItemBoundary;
+import dts.boundaries.UserBoundary;
 
-	private IdBoundary operationId;
+public class OperationEntity {
+
+	private String operationId;
 	private String type;
 	private ItemBoundary item;
 	private Date createdTimestamp;
 	private UserBoundary invokedBy;
 	private Map<String, Object> operationAttributes;
 
-	public OperationBoundary() {
-		this.operationId = new IdBoundary();
-		this.type = "operationType";
-		item = new ItemBoundary();
-		createdTimestamp = new Date();
-		invokedBy = new UserBoundary();
-
-		operationAttributes = new HashMap<>();
-		operationAttributes.put("key1", "Amazing operation");
-		operationAttributes.put("key2", true);
-		operationAttributes.put("key3", 88.88);
-		operationAttributes.put("key4", new NameBoundary("First", "Last"));
+	public OperationEntity() {
 
 	}
 
-	public OperationBoundary(IdBoundary operationId) {
-		this();
+	public OperationEntity(String operationId, String type, ItemBoundary item, Date createdTimestamp,
+			UserBoundary invokedBy, Map<String, Object> operationAttributes) {
+		super();
 		this.operationId = operationId;
+		this.type = type;
+		this.item = item;
+		this.createdTimestamp = createdTimestamp;
+		this.invokedBy = invokedBy;
+		this.operationAttributes = operationAttributes;
 	}
 
-	public OperationBoundary(String space, String id) {
-		this();
-		this.operationId = new IdBoundary(space, id);
-	}
-
-	public IdBoundary getOperationId() {
+	public String getOperationId() {
 		return operationId;
 	}
 
-	public void setOperationId(IdBoundary operationId) {
+	public void setOperationId(String operationId) {
 		this.operationId = operationId;
 	}
 
@@ -85,4 +77,5 @@ public class OperationBoundary {
 	public void setOperationAttributes(Map<String, Object> operationAttributes) {
 		this.operationAttributes = operationAttributes;
 	}
+
 }
