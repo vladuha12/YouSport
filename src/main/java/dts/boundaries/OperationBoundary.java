@@ -28,6 +28,16 @@ public class OperationBoundary {
 
 	}
 
+	public OperationBoundary(IdBoundary operationId) {
+		this();
+		this.operationId = operationId;
+	}
+
+	public OperationBoundary(String space, String id) {
+		this();
+		this.operationId = new IdBoundary(space, id);
+	}
+
 	public IdBoundary getOperationId() {
 		return operationId;
 	}
@@ -75,5 +85,4 @@ public class OperationBoundary {
 	public void setOperationAttributes(Map<String, Object> operationAttributes) {
 		this.operationAttributes = operationAttributes;
 	}
-
 }

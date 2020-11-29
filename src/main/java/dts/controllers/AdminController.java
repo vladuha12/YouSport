@@ -2,23 +2,32 @@ package dts.controllers;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import dts.boundaries.OperationBoundary;
 import dts.boundaries.UserBoundary;
+import dts.logic.UsersService;
 
 @RestController
 public class AdminController {
+	private UsersService userHandler;
+	
+	// Initialize UserService handler
+	@Autowired
+	public void setUserHandler(UsersService userHandler) {
+		this.userHandler = userHandler;
+	}
 
 	// Delete All Users API
 	@RequestMapping(method = RequestMethod.DELETE, path = "/dts/admin/users/{adminSpace}/{adminEmail}")
 	public void deleteAllUsers(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail) {
-		System.err.println("deleted All Users By: " + adminEmail);
+		//System.err.println("deleted All Users By: " + adminEmail);
+		userHandler.deleteAllUsers(adminSpace, adminEmail);
 	}
 
 	// Delete All Items API
@@ -37,15 +46,10 @@ public class AdminController {
 
 	// Export All Users API (Example Create 7 users and return)
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/admin/users/{adminSpace}/{adminEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ArrayList<UserBoundary> exportAllUsers(@PathVariable("adminSpace") String adminSpace,
+	public UserBoundary[] exportAllUsers(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail) {
-
-		ArrayList<UserBoundary> UsersResault = new ArrayList<UserBoundary>();
-		for (int i = 0; i < 7; i++) {
-			UsersResault.add(new UserBoundary());
-
-		}
-		return UsersResault;
+		
+		return userHandler.getAllUsers(adminSpace, adminEmail).toArray(new UserBoundary[0]);
 	}
 	
 	// Export All Operations API (Example Create 7 operations and return)

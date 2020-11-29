@@ -3,25 +3,35 @@ package dts.boundaries;
 import dts.data.UserRole;
 
 public class UserBoundary {
-	private IdBoundary userId;
+	private UserIdBoundary userId;
+	private String email;
 	private UserRole role;
 	private String username;
 	private String avatar;
-	private String email;
 	
 	public UserBoundary() {
-		this.userId =  new IdBoundary();
+		this.userId =  new UserIdBoundary();
 		this.role = UserRole.PLAYER;
 		this.username = "Demo User";
 		this.avatar = "ooOO_()OOoo";
-		this.email = "test@test.com";
 	}
 	
-	public IdBoundary getUserId() {
+	
+	public UserBoundary(UserIdBoundary userId, UserRole role, String username, String avatar, String email) {
+		super();
+		this.userId = userId;
+		this.role = role;
+		this.username = username;
+		this.avatar = avatar;
+		this.email = email;
+	}
+
+
+	public UserIdBoundary getUserId() {
 		return userId;
 	}
 
-	public void setUserId(IdBoundary userId) {
+	public void setUserId(UserIdBoundary userId) {
 		this.userId = userId;
 	}
 
@@ -48,18 +58,18 @@ public class UserBoundary {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-	
-	public String getEmail() {
-		return email;
+
+	public void setSpace(String space) {
+		this.userId.setSpace(space);		
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
+		this.userId.setEmail(email);
 	}
 
 	@Override
 	public String toString() {
-		return "UserBoundary [userId=" + userId + ", role=" + role + ", username=" + username + ", avatar=" + avatar
-				+ ", email=" + email + "]";
+		return this.userId + "&" + this.role.name() + "&" + this.username + "&" + this.avatar + "&" + this.email;
 	}
 }
