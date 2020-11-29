@@ -26,7 +26,7 @@ public class AdminController {
 	@RequestMapping(method = RequestMethod.DELETE, path = "/dts/admin/users/{adminSpace}/{adminEmail}")
 	public void deleteAllUsers(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail) {
-		System.err.println("deleted All Users By: " + adminEmail);
+		//System.err.println("deleted All Users By: " + adminEmail);
 		userHandler.deleteAllUsers(adminSpace, adminEmail);
 	}
 
@@ -48,7 +48,7 @@ public class AdminController {
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/admin/users/{adminSpace}/{adminEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary[] exportAllUsers(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail) {
-
+		
 		return userHandler.getAllUsers(adminSpace, adminEmail).toArray(new UserBoundary[0]);
 	}
 	
