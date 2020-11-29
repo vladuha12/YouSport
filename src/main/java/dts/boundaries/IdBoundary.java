@@ -30,6 +30,11 @@ public class IdBoundary {
 		this.space = space;
 	}
 
+	/*
+	 * @Value("${spring.application.name:Space should be here}") public void
+	 * setSpace(String space) { this.space = space; }
+	 */
+
 	public String getId() {
 		return id;
 	}
@@ -38,6 +43,7 @@ public class IdBoundary {
 		this.id = id;
 	}
 
+	@Override
 	public String toString() {
 		return this.space + "@" + this.id;
 	}

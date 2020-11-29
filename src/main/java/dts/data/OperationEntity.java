@@ -3,24 +3,20 @@ package dts.data;
 import java.util.Date;
 import java.util.Map;
 
-import dts.boundaries.ItemBoundary;
-import dts.boundaries.UserBoundary;
-
 public class OperationEntity {
 
 	private String operationId;
 	private String type;
-	private ItemBoundary item;
+	private ItemEntity item;
 	private Date createdTimestamp;
-	private UserBoundary invokedBy;
+	private String invokedBy;
 	private Map<String, Object> operationAttributes;
 
 	public OperationEntity() {
-
 	}
 
-	public OperationEntity(String operationId, String type, ItemBoundary item, Date createdTimestamp,
-			UserBoundary invokedBy, Map<String, Object> operationAttributes) {
+	public OperationEntity(String operationId, String type, ItemEntity item, Date createdTimestamp, String invokedBy,
+			Map<String, Object> operationAttributes) {
 		super();
 		this.operationId = operationId;
 		this.type = type;
@@ -46,11 +42,11 @@ public class OperationEntity {
 		this.type = type;
 	}
 
-	public ItemBoundary getItem() {
+	public ItemEntity getItem() {
 		return item;
 	}
 
-	public void setItem(ItemBoundary item) {
+	public void setItem(ItemEntity item) {
 		this.item = item;
 	}
 
@@ -62,11 +58,11 @@ public class OperationEntity {
 		this.createdTimestamp = createdTimestamp;
 	}
 
-	public UserBoundary getInvokedBy() {
+	public String getInvokedBy() {
 		return invokedBy;
 	}
 
-	public void setInvokedBy(UserBoundary invokedBy) {
+	public void setInvokedBy(String invokedBy) {
 		this.invokedBy = invokedBy;
 	}
 

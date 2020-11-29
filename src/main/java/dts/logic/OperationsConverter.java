@@ -3,8 +3,12 @@ package dts.logic;
 import org.springframework.stereotype.Component;
 
 import dts.boundaries.IdBoundary;
+import dts.boundaries.ItemBoundary;
 import dts.boundaries.OperationBoundary;
+import dts.boundaries.UserBoundary;
+import dts.data.ItemEntity;
 import dts.data.OperationEntity;
+import dts.data.UserRole;
 
 @Component
 public class OperationsConverter {
@@ -13,16 +17,22 @@ public class OperationsConverter {
 		OperationEntity entity = new OperationEntity();
 
 		if (newOperation.getOperationId() != null)
-			entity.setOperationId(newOperation.toString());
+			entity.setOperationId(newOperation.getOperationId().toString());
+		else
+			entity.setOperationId(new IdBoundary().toString());
 
 		if (newOperation.getType() != null)
 			entity.setType(newOperation.getType());
 
-		if (newOperation.getItem() != null)
-			entity.setItem(newOperation.getItem());
+		// Converter
+		if (newOperation.getItem() != null) {
+			ItemConverter itemConverter = new ItemConverter();
+			ItemEntity itemEntity = itemConverter.toEntity(newOperation.getItem());
+			entity.setItem(itemEntity);
+		}
 
 		if (newOperation.getInvokedBy() != null)
-			entity.setInvokedBy(newOperation.getInvokedBy());
+			entity.setInvokedBy(newOperation.getInvokedBy().toString());
 
 		entity.setCreatedTimestamp(newOperation.getCreatedTimestamp());
 		entity.setOperationAttributes(newOperation.getOperationAttributes());
@@ -33,21 +43,48 @@ public class OperationsConverter {
 	public OperationBoundary toBoundary(OperationEntity entity) {
 		OperationBoundary boundary = new OperationBoundary();
 
-		boundary.setCreatedTimestamp(entity.getCreatedTimestamp());
-		boundary.setOperationId(this.fromStringToBoundary(entity.getOperationId()));
-		boundary.setInvokedBy(entity.getInvokedBy());
-		boundary.setItem(entity.getItem());
-		boundary.setType(entity.getType());
-		boundary.setOperationAttributes(entity.getOperationAttributes());
+		if (entity.getOperationId() != null)
+			boundary.setOperationId(this.fromStringToIdBoundary(entity.getOperationId().toString()));
+		else
+			boundary.setOperationId(new IdBoundary());
+
+		if (entity.getCreatedTimestamp() != null)
+			boundary.setCreatedTimestamp(entity.getCreatedTimestamp());
+
+		if (entity.getInvokedBy() != null)
+			boundary.setInvokedBy(fromStringToUserBoundary(entity.getInvokedBy()));
+
+		// Converter
+		if (entity.getItem() != null) {
+			ItemConverter itemConverter = new ItemConverter();
+			ItemBoundary itemBoundary = itemConverter.toBoundary(entity.getItem());
+			boundary.setItem(itemBoundary);
+		}
+
+		if (entity.getType() != null)
+			boundary.setType(entity.getType());
+
+		if (entity.getOperationAttributes() != null)
+			boundary.setOperationAttributes(entity.getOperationAttributes());
 
 		return boundary;
 	}
 
-	private IdBoundary fromStringToBoundary(String id) {
+	private IdBoundary fromStringToIdBoundary(String id) {
 		if (id != null) {
 			String[] args = id.split("@");
 			return new IdBoundary(args[0], args[1]);
 		} else
 			return null;
+	}
+
+	private UserBoundary fromStringToUserBoundary(String name) {
+		if (name != null) {
+			String[] args = name.split("&");
+			return new UserBoundary(fromStringToIdBoundary(args[0]), UserRole.valueOf(args[1]), args[2], args[3],
+					args[4]);
+		} else {
+			return null;
+		}
 	}
 }

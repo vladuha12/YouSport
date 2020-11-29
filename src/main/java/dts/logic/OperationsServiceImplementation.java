@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -13,7 +12,6 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dts.boundaries.IdBoundary;
 import dts.boundaries.OperationBoundary;
 import dts.data.OperationEntity;
 
@@ -21,7 +19,7 @@ import dts.data.OperationEntity;
 public class OperationsServiceImplementation implements OperationsService {
 
 	private Map<String, OperationEntity> operationsStorage;
-	private AtomicLong idGenerator;
+	// private AtomicLong idGenerator;
 	private OperationsConverter operationsConverter;
 
 	@Autowired
@@ -32,20 +30,18 @@ public class OperationsServiceImplementation implements OperationsService {
 	@PostConstruct
 	public void init() {
 		this.operationsStorage = Collections.synchronizedMap(new HashMap<>());
-		this.idGenerator = new AtomicLong(1l);
+		// this.idGenerator = new AtomicLong(1l);
 	}
 
 	@Override
 	public Object invokeOperation(OperationBoundary operation) {
 
-		String id = "" + idGenerator.getAndIncrement();
-		operation.setOperationId(new IdBoundary(id));
 		operation.setCreatedTimestamp(new Date());
 
 		OperationEntity entity = this.operationsConverter.toEntity(operation);
 
 		// MOCKUP of database storage
-		this.operationsStorage.put(operation.getOperationId().toString(), entity);
+		this.operationsStorage.put(operation.getOperationId().getId(), entity);
 
 		return this.operationsConverter.toBoundary(entity);
 	}
