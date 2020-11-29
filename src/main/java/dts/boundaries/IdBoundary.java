@@ -2,12 +2,14 @@ package dts.boundaries;
 
 import java.util.UUID;
 
+import dts.Application;
+
 public class IdBoundary {
 	private String space;
 	private String id;
 
 	public IdBoundary() {
-		this.space = "tempSpace";
+		this.space = Application.APPLICATION_NAME;
 		this.id = UUID.randomUUID().toString();
 	}
 
@@ -37,7 +39,7 @@ public class IdBoundary {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.space + "@" + this.id;

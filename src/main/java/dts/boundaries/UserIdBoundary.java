@@ -1,11 +1,13 @@
 package dts.boundaries;
 
+import dts.Application;
+
 public class UserIdBoundary {
 	private String space;
 	private String email;
 
 	public UserIdBoundary() {
-		this.space = "2021a.demo";
+		this.space = Application.APPLICATION_NAME;
 		this.email = "demo@maildomain.com";
 	}
 
@@ -30,4 +32,10 @@ public class UserIdBoundary {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	@Override
+	public String toString() {
+		return this.space + "#" + this.email;
+	}
+
 }
