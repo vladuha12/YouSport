@@ -1,17 +1,26 @@
 package dts.logic;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import dts.boundaries.IdBoundary;
 import dts.boundaries.ItemBoundary;
 import dts.boundaries.OperationBoundary;
 import dts.boundaries.UserBoundary;
+import dts.boundaries.UserIdBoundary;
 import dts.data.ItemEntity;
 import dts.data.OperationEntity;
 import dts.data.UserRole;
 
 @Component
 public class OperationsConverter {
+
+	private String spaceHelper;
+
+	@Value("${spring.application.name:Space should be here}")
+	public void setSpace(String space) {
+		this.spaceHelper = space;
+	}
 
 	public OperationEntity toEntity(OperationBoundary newOperation) {
 		OperationEntity entity = new OperationEntity();
@@ -81,10 +90,18 @@ public class OperationsConverter {
 	private UserBoundary fromStringToUserBoundary(String name) {
 		if (name != null) {
 			String[] args = name.split("&");
-			return new UserBoundary(fromStringToIdBoundary(args[0]), UserRole.valueOf(args[1]), args[2], args[3],
+			return new UserBoundary(fromStringToUserIdBoundary(args[0]), UserRole.valueOf(args[1]), args[2], args[3],
 					args[4]);
 		} else {
 			return null;
 		}
+	}
+
+	private UserIdBoundary fromStringToUserIdBoundary(String id) {
+		if (id != null) {
+			String[] args = id.split("#");
+			return new UserIdBoundary(args[0], args[1]);
+		} else
+			return null;
 	}
 }
