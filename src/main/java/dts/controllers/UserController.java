@@ -14,6 +14,7 @@ import dts.logic.UsersService;
 public class UserController {
 	private UsersService userHandler;
 
+	// Initialize UserService handler
 	@Autowired
 	public void setUserHandler(UsersService userHandler) {
 		this.userHandler = userHandler;

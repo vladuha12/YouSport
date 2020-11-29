@@ -8,6 +8,7 @@ import dts.data.UserEntity;
 @Component
 public class UserConverter {
 
+	// Converts from UserBoundary to UserEntity
 	public UserEntity toEntity(UserBoundary newUser) {
 		UserIdConverter userIdConverter = new UserIdConverter();
 		UserEntity entity = new UserEntity();
@@ -24,6 +25,7 @@ public class UserConverter {
 		return entity;
 	}
 
+	// Converts from UserEntity to UserBoundary
 	public UserBoundary toBoundary(UserEntity entity) {
 		UserIdConverter userIdConverter = new UserIdConverter();
 		UserBoundary boundary = new UserBoundary();

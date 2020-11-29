@@ -14,9 +14,9 @@ import dts.logic.UsersService;
 
 @RestController
 public class AdminController {
-	
 	private UsersService userHandler;
 	
+	// Initialize UserService handler
 	@Autowired
 	public void setUserHandler(UsersService userHandler) {
 		this.userHandler = userHandler;
@@ -26,7 +26,7 @@ public class AdminController {
 	@RequestMapping(method = RequestMethod.DELETE, path = "/dts/admin/users/{adminSpace}/{adminEmail}")
 	public void deleteAllUsers(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail) {
-		//System.err.println("deleted All Users By: " + adminEmail);
+		System.err.println("deleted All Users By: " + adminEmail);
 		userHandler.deleteAllUsers(adminSpace, adminEmail);
 	}
 
@@ -49,12 +49,6 @@ public class AdminController {
 	public UserBoundary[] exportAllUsers(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail) {
 
-//		ArrayList<UserBoundary> UsersResault = new ArrayList<UserBoundary>();
-//		for (int i = 0; i < 7; i++) {
-//			UsersResault.add(new UserBoundary());
-//
-//		}
-		
 		return userHandler.getAllUsers(adminSpace, adminEmail).toArray(new UserBoundary[0]);
 	}
 	
