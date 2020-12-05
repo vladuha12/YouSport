@@ -1,11 +1,13 @@
 package dts.data;
 
+import dts.Application;
+
 public class UserIdEntity {
 	private String space;
 	private String email;
 
 	public UserIdEntity() {
-		this.space = "2021a.demo";
+		this.space = Application.APPLICATION_NAME;
 		this.email = "demo@maildomain.com";
 	}
 

@@ -81,7 +81,7 @@ public class OperationsConverter {
 
 	private IdBoundary fromStringToIdBoundary(String id) {
 		if (id != null) {
-			String[] args = id.split("@");
+			String[] args = id.split("\\$");
 			return new IdBoundary(args[0], args[1]);
 		} else
 			return null;
@@ -99,7 +99,7 @@ public class OperationsConverter {
 
 	private UserIdBoundary fromStringToUserIdBoundary(String id) {
 		if (id != null) {
-			String[] args = id.split("#");
+			String[] args = id.split("\\$");
 			return new UserIdBoundary(args[0], args[1]);
 		} else
 			return null;

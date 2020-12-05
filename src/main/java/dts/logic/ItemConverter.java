@@ -29,8 +29,8 @@ public class ItemConverter {
 			boundary.setLocation(fromStringToLocationBoundary(entity.getLocation()));
 		}
 
-		if (entity.getCreationDate() != null) {
-			boundary.setCreationDate(entity.getCreationDate());
+		if (entity.getCreatedTimestamp() != null) {
+			boundary.setCreatedTimestamp(entity.getCreatedTimestamp());
 		}
 
 		if (entity.getName() != null) {
@@ -68,8 +68,8 @@ public class ItemConverter {
 			entity.setLocation(boundary.getLocation().toString());
 		}
 
-		if (boundary.getCreationDate() != null) {
-			entity.setCreationDate(boundary.getCreationDate());
+		if (boundary.getCreatedTimestamp() != null) {
+			entity.setCreatedTimestamp(boundary.getCreatedTimestamp());
 		}
 
 		if (boundary.getName() != null) {
@@ -93,7 +93,7 @@ public class ItemConverter {
 
 	private IdBoundary fromStringToIdBoundary(String id) {
 		if (id != null) {
-			String[] args = id.split("@");
+			String[] args = id.split("\\$");
 			return new IdBoundary(args[0], args[1]);
 		} else {
 			return null;
@@ -121,7 +121,7 @@ public class ItemConverter {
 
 	private UserIdBoundary fromStringToUserIdBoundary(String id) {
 		if (id != null) {
-			String[] args = id.split("#");
+			String[] args = id.split("\\$");
 			return new UserIdBoundary(args[0], args[1]);
 		} else
 			return null;

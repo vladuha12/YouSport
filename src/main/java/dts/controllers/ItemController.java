@@ -24,7 +24,7 @@ public class ItemController {
 	
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary item(@PathVariable("userSpace") String userSpace, @PathVariable("userEmail") String userEmail,
-			@PathVariable("itemSpace") String itemSpace, @PathVariable("itemId") String itemId) {
+			@PathVariable("itemSpace") String itemSpace, @PathVariable("itemId") String itemId) throws Exception {
 		return itemsHandler.getSpecificItem(userSpace, userEmail, itemSpace, itemId);
 	}
 	
@@ -37,14 +37,14 @@ public class ItemController {
 	@RequestMapping(method = RequestMethod.PUT, path = "/dts/items/{managerSpace}/{managerEmail}/{itemSpace}/{itemId}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary updateExistingItem(@PathVariable("managerSpace") String managerSpace,
 			@PathVariable("managerEmail") String managerEmail, @PathVariable("itemSpace") String itemSpace,
-			@PathVariable("itemId") String itemId, @RequestBody ItemBoundary updatedItem) {	
+			@PathVariable("itemId") String itemId, @RequestBody ItemBoundary updatedItem) throws Exception {	
 		return itemsHandler.update(managerSpace, managerEmail, itemSpace, itemId, updatedItem);
 	}
 
 	@RequestMapping(path = "/dts/items/{managerSpace}/{managerEmail}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary storeItem(@PathVariable("managerSpace") String managerSpace,
-			@PathVariable("managerEmail") String managerEmail, @RequestBody ItemBoundary newItem) {
-		return itemsHandler.Create(managerSpace, managerEmail, newItem);
+			@PathVariable("managerEmail") String managerEmail, @RequestBody ItemBoundary newItem) throws Exception {
+		return itemsHandler.create(managerSpace, managerEmail, newItem);
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE, path = "/dts/items/{adminSpace}/{adminEmail}", produces = MediaType.APPLICATION_JSON_VALUE)

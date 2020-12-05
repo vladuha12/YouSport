@@ -15,12 +15,12 @@ public class IdBoundary {
 
 	public IdBoundary(String space, String id) {
 		super();
-		this.space = space;
+		this.space = Application.APPLICATION_NAME;
 		this.id = id;
 	}
 
 	public IdBoundary(String id) {
-		this.space = "tempSpace";
+		this.space = Application.APPLICATION_NAME;
 		this.id = id;
 	}
 
@@ -42,6 +42,6 @@ public class IdBoundary {
 
 	@Override
 	public String toString() {
-		return this.space + "@" + this.id;
+		return this.space + "$" + this.id;
 	}
 }

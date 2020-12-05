@@ -7,7 +7,7 @@ public class ItemEntity {
 	private String itemId;
 	private String name;
 	private String type;
-	private Date creationDate;
+	private Date createdTimestamp;
 	private Boolean active;
 	private String createdBy;
 	private String location;
@@ -16,13 +16,13 @@ public class ItemEntity {
 	public ItemEntity() {
 	}
 
-	public ItemEntity(String itemId, String name, String type, Date creationDate, Boolean active,
+	public ItemEntity(String itemId, String name, String type, Date createdTimestamp, Boolean active,
 			String createdBy, String location, Map<String, Object> itemAttributes) {
 		super();
 		this.itemId = itemId;
 		this.name = name;
 		this.type = type;
-		this.creationDate = creationDate;
+		this.createdTimestamp = createdTimestamp;
 		this.active = active;
 		this.createdBy = createdBy;
 		this.location = location;
@@ -53,12 +53,12 @@ public class ItemEntity {
 		this.type = type;
 	}
 
-	public Date getCreationDate() {
-		return creationDate;
+	public Date getCreatedTimestamp() {
+		return createdTimestamp;
 	}
 
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
+	public void setCreatedTimestamp(Date createdTimestamp) {
+		this.createdTimestamp = createdTimestamp;
 	}
 
 	public Boolean getActive() {

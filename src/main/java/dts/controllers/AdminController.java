@@ -10,16 +10,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import dts.boundaries.OperationBoundary;
 import dts.boundaries.UserBoundary;
+import dts.logic.ItemsService;
 import dts.logic.UsersService;
 
 @RestController
 public class AdminController {
 	private UsersService userHandler;
+	private ItemsService itemsHandler;
 	
 	// Initialize UserService handler
 	@Autowired
 	public void setUserHandler(UsersService userHandler) {
 		this.userHandler = userHandler;
+	}
+	
+	@Autowired
+	public void setItemsService(ItemsService itemsHandler) {
+		this.itemsHandler = itemsHandler;
 	}
 
 	// Delete All Users API
@@ -34,7 +41,7 @@ public class AdminController {
 	@RequestMapping(method = RequestMethod.DELETE, path = "/dts/admin/items/{adminSpace}/{adminEmail}")
 	public void deleteAllItems(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail) {
-		System.err.println("deleted All Items By: " + adminEmail);
+		itemsHandler.deleteAll(adminSpace, adminEmail);
 	}
 
 	// Delete All Operations API
