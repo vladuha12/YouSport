@@ -1,4 +1,4 @@
-package dts.logic;
+package dts.logic.user;
 
 import java.util.List;
 

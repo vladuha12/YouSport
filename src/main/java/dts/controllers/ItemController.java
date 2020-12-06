@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import dts.boundaries.ItemBoundary;
-import dts.logic.ItemsService;
+import dts.logic.item.ItemsService;
 
 @RestController
 public class ItemController {

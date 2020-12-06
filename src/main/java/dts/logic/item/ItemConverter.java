@@ -1,4 +1,4 @@
-package dts.logic;
+package dts.logic.item;
 
 import org.springframework.stereotype.Component;
 
