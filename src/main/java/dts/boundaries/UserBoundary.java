@@ -4,7 +4,6 @@ import dts.data.UserRole;
 
 public class UserBoundary {
 	private UserIdBoundary userId;
-	private String email;
 	private UserRole role;
 	private String username;
 	private String avatar;
@@ -17,13 +16,12 @@ public class UserBoundary {
 	}
 	
 	
-	public UserBoundary(UserIdBoundary userId, UserRole role, String username, String avatar, String email) {
+	public UserBoundary(UserIdBoundary userId, UserRole role, String username, String avatar) {
 		super();
 		this.userId = userId;
 		this.role = role;
 		this.username = username;
 		this.avatar = avatar;
-		this.email = email;
 	}
 
 
@@ -64,12 +62,11 @@ public class UserBoundary {
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
 		this.userId.setEmail(email);
 	}
 
 	@Override
 	public String toString() {
-		return this.userId + "&" + this.role.name() + "&" + this.username + "&" + this.avatar + "&" + this.email;
+		return this.userId + "&" + this.role.name() + "&" + this.username + "&" + this.avatar;
 	}
 }
