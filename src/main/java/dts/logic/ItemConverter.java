@@ -103,8 +103,7 @@ public class ItemConverter {
 	private UserBoundary fromStringToUserBoundary(String name) {
 		if (name != null) {
 			String[] args = name.split("&");
-			return new UserBoundary(fromStringToUserIdBoundary(args[0]), UserRole.valueOf(args[1]), args[2], args[3],
-					args[4]);
+			return new UserBoundary(fromStringToUserIdBoundary(args[0]), UserRole.valueOf(args[1]), args[2], args[3]);
 		} else {
 			return null;
 		}
