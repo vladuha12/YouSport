@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import dts.boundaries.OperationBoundary;
-import dts.logic.OperationsService;
+import dts.logic.operation.OperationsService;
 
 @RestController
 public class OperationController {

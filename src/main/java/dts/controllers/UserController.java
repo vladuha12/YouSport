@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dts.boundaries.NewUserBoundary;
 import dts.boundaries.UserBoundary;
-import dts.logic.UsersService;
+import dts.logic.user.UsersService;
 
 @RestController
 public class UserController {

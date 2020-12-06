@@ -1,4 +1,4 @@
-package dts.logic;
+package dts.logic.operation;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -11,6 +11,7 @@ import dts.boundaries.UserIdBoundary;
 import dts.data.ItemEntity;
 import dts.data.OperationEntity;
 import dts.data.UserRole;
+import dts.logic.item.ItemConverter;
 
 @Component
 public class OperationsConverter {

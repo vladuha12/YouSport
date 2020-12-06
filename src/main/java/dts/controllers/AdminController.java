@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import dts.boundaries.OperationBoundary;
 import dts.boundaries.UserBoundary;
-import dts.logic.ItemsService;
-import dts.logic.UsersService;
+import dts.logic.item.ItemsService;
+import dts.logic.user.UsersService;
 
 @RestController
 public class AdminController {
