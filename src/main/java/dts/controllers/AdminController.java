@@ -8,24 +8,25 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import dts.boundaries.OperationBoundary;
 import dts.boundaries.UserBoundary;
-import dts.logic.item.ItemsService;
+import dts.logic.item.EnhancedItemsService;
 import dts.logic.user.UsersService;
 
 @RestController
 public class AdminController {
 	private UsersService userHandler;
-	private ItemsService itemsHandler;
-	
+	private EnhancedItemsService itemsHandler;
+
 	// Initialize UserService handler
 	@Autowired
 	public void setUserHandler(UsersService userHandler) {
 		this.userHandler = userHandler;
 	}
-	
+
 	@Autowired
-	public void setItemsService(ItemsService itemsHandler) {
+	public void setItemsService(EnhancedItemsService itemsHandler) {
 		this.itemsHandler = itemsHandler;
 	}
 
@@ -33,7 +34,7 @@ public class AdminController {
 	@RequestMapping(method = RequestMethod.DELETE, path = "/dts/admin/users/{adminSpace}/{adminEmail}")
 	public void deleteAllUsers(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail) {
-		//System.err.println("deleted All Users By: " + adminEmail);
+		// System.err.println("deleted All Users By: " + adminEmail);
 		userHandler.deleteAllUsers(adminSpace, adminEmail);
 	}
 
@@ -55,10 +56,10 @@ public class AdminController {
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/admin/users/{adminSpace}/{adminEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary[] exportAllUsers(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail) {
-		
+
 		return userHandler.getAllUsers(adminSpace, adminEmail).toArray(new UserBoundary[0]);
 	}
-	
+
 	// Export All Operations API (Example Create 7 operations and return)
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/admin/operations/{adminSpace}/{adminEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ArrayList<OperationBoundary> exportAllOperations(@PathVariable("adminSpace") String adminSpace,

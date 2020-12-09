@@ -1,23 +1,32 @@
 package dts.data;
 
 import java.util.Date;
-import java.util.Map;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+@Entity
+@Table(name = "ITEMS")
 public class ItemEntity {
 	private String itemId;
 	private String name;
 	private String type;
 	private Date createdTimestamp;
 	private Boolean active;
-	private String createdBy;
+	private UserEntity createdBy;
 	private String location;
-	private Map<String, Object> itemAttributes;
+	private String itemAttributes;
 
 	public ItemEntity() {
 	}
 
 	public ItemEntity(String itemId, String name, String type, Date createdTimestamp, Boolean active,
-			String createdBy, String location, Map<String, Object> itemAttributes) {
+			UserEntity createdBy, String location, String itemAttributes) {
 		super();
 		this.itemId = itemId;
 		this.name = name;
@@ -29,6 +38,7 @@ public class ItemEntity {
 		this.itemAttributes = itemAttributes;
 	}
 
+	@Id
 	public String getItemId() {
 		return itemId;
 	}
@@ -53,6 +63,7 @@ public class ItemEntity {
 		this.type = type;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
@@ -69,11 +80,13 @@ public class ItemEntity {
 		this.active = active;
 	}
 
-	public String getCreatedBy() {
+	public UserEntity getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	// @ManyToOne(fetch = FetchType.LAZY)
+	@Transient
+	public void setCreatedBy(UserEntity createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -85,12 +98,38 @@ public class ItemEntity {
 		this.location = location;
 	}
 
-	public Map<String, Object> getItemAttributes() {
+	@Lob
+	public String getItemAttributes() {
 		return itemAttributes;
 	}
 
-	public void setItemAttributes(Map<String, Object> itemAttributes) {
+	public void setItemAttributes(String itemAttributes) {
 		this.itemAttributes = itemAttributes;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((itemId == null) ? 0 : itemId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ItemEntity other = (ItemEntity) obj;
+		if (itemId == null) {
+			if (other.itemId != null)
+				return false;
+		} else if (!itemId.equals(other.itemId))
+			return false;
+		return true;
 	}
 
 }
