@@ -1,6 +1,14 @@
 package dts.logic.item;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dts.boundaries.IdBoundary;
 import dts.boundaries.ItemBoundary;
@@ -9,9 +17,23 @@ import dts.boundaries.UserBoundary;
 import dts.boundaries.UserIdBoundary;
 import dts.data.ItemEntity;
 import dts.data.UserRole;
+import dts.logic.user.UserConverter;
 
 @Component
 public class ItemConverter {
+
+	private ObjectMapper jackson;
+	private UserConverter userConverter;
+
+	@Autowired
+	public void setUserConverter(UserConverter userConverter) {
+		this.userConverter = userConverter;
+	}
+
+	@PostConstruct
+	public void init() {
+		this.jackson = new ObjectMapper();
+	}
 
 	public ItemBoundary toBoundary(ItemEntity entity) {
 		ItemBoundary boundary = new ItemBoundary();
@@ -22,7 +44,7 @@ public class ItemConverter {
 			boundary.setItemId(new IdBoundary());
 
 		if (entity.getCreatedBy() != null) {
-			boundary.setCreatedBy(fromStringToUserBoundary(entity.getCreatedBy()));
+			boundary.setCreatedBy(this.userConverter.toBoundary((entity.getCreatedBy())));
 		}
 
 		if (entity.getLocation() != null) {
@@ -46,7 +68,7 @@ public class ItemConverter {
 		}
 
 		if (entity.getItemAttributes() != null) {
-			boundary.setItemAttributes(entity.getItemAttributes());
+			boundary.setItemAttributes(this.toBoundaryAsMap(entity.getItemAttributes()));
 		}
 
 		return boundary;
@@ -61,7 +83,7 @@ public class ItemConverter {
 			entity.setItemId(new IdBoundary().toString());
 
 		if (boundary.getCreatedBy() != null) {
-			entity.setCreatedBy(boundary.getCreatedBy().toString());
+			entity.setCreatedBy(this.userConverter.toEntity(boundary.getCreatedBy()));
 		}
 
 		if (boundary.getLocation() != null) {
@@ -85,10 +107,36 @@ public class ItemConverter {
 		}
 
 		if (boundary.getItemAttributes() != null) {
-			entity.setItemAttributes(boundary.getItemAttributes());
+			entity.setItemAttributes(this.toEntity(boundary.getItemAttributes()));
 		}
 
 		return entity;
+	}
+
+	private String toEntity(Map<String, Object> attributes) {
+		// Object->JSON:
+		if (attributes != null) {
+			try {
+				return this.jackson.writeValueAsString(attributes);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		} else {
+			return "{}";
+		}
+	}
+
+	private Map<String, Object> toBoundaryAsMap(String attributes) {
+		// JSON > Object
+		if (attributes != null) {
+			try {
+				return this.jackson.readValue(attributes, Map.class);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		} else {
+			return new HashMap<>();
+		}
 	}
 
 	private IdBoundary fromStringToIdBoundary(String id) {
