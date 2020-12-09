@@ -77,7 +77,6 @@ public class ApplicationTests {
 		    urlTest = this.url + "/users";
 	       //GIVEN the server is up and empty (Tested)
 		   //Set time
-		    long now = System.currentTimeMillis();
 	       //WHEN I POST /dts/users using (Null Json)
 			UserBoundary actual = this.restTemplate
 					.postForObject(urlTest, new HashMap<>(), UserBoundary.class);
@@ -85,8 +84,6 @@ public class ApplicationTests {
 		   //AND the server returns the JOSN (User boundary - player) //Date bigger to test if new
 			assertThat(actual.getUserId())
 			.isNotNull();
-			assertThat(actual.getCreationDate().getTime())
-			.isGreaterThan(now);
 			assertThat(actual.getUserId().getEmail())
 			.isEqualTo("demo@maildomain.com");
 			assertThat(actual.getUserId().getSpace())
@@ -151,7 +148,7 @@ public class ApplicationTests {
 		    //Set new URL for PUT
 			urlTest = this.url + "/users/" + Application.APPLICATION_NAME +"/demoTEST@maildomain.com";
 		    UserIdBoundary updateid = new UserIdBoundary(Application.APPLICATION_NAME,"demoTEST@maildomain.com");
-		    UserBoundary updateUser = new UserBoundary(updateid,UserRole.PLAYER,"JUnit Test", "0.-(-!-)","demoTEST@maildomain.com");
+		    UserBoundary updateUser = new UserBoundary(updateid,UserRole.PLAYER,"JUnit Test", "0.-(-!-)");
 			this.restTemplate
 					.put(urlTest, updateUser);
 		   //THEN the result HTTP STATUS 2xx 
@@ -199,7 +196,7 @@ public class ApplicationTests {
 		   //AND the server returns the JOSN (Item boundary) //Date bigger to test if new
 			assertThat(actual.getItemId())
 			.isNotNull();
-			assertThat(actual.getCreationDate().getTime())
+			assertThat(actual.getCreatedTimestamp().getTime())
 			.isGreaterThan(now);
 			assertThat(actual.getActive())
 			.isEqualTo(true);
@@ -386,14 +383,11 @@ public class ApplicationTests {
 	    // Make 10 users to fill the User
         for(i=0;i<limit;i++)
         {
-			    long now = System.currentTimeMillis();
 				UserBoundary actual = this.restTemplate
 						.postForObject(urlTest, new HashMap<>(), UserBoundary.class);
 				// Test Every step !
 				assertThat(actual.getUserId())
 				.isNotNull();
-				assertThat(actual.getCreationDate().getTime())
-				.isGreaterThan(now);
 				assertThat(actual.getUserId().getEmail())
 				.isEqualTo("demo@maildomain.com");
 				assertThat(actual.getUserId().getSpace())
