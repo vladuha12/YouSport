@@ -10,13 +10,12 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import dts.boundaries.IdBoundary;
 import dts.boundaries.ItemBoundary;
 import dts.data.ItemEntity;
 
-@Service
+//@Service
 public class ItemsServiceImplementation implements ItemsService {
 	private Map<String, ItemEntity> itemStore;
 	private ItemConverter itemConverter;
@@ -38,7 +37,7 @@ public class ItemsServiceImplementation implements ItemsService {
 			IdBoundary id = new IdBoundary();
 			entity.setItemId(id.toString());
 			entity.setCreatedTimestamp(new Date());
-			
+
 			this.itemStore.put(entity.getItemId(), entity);
 
 			return this.itemConverter.toBoundary(entity);
