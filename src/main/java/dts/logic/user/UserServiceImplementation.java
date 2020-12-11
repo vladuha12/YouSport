@@ -16,7 +16,6 @@ import dts.boundaries.NewUserBoundary;
 import dts.boundaries.UserBoundary;
 import dts.boundaries.UserIdBoundary;
 import dts.data.UserEntity;
-import dts.data.UserIdEntity;
 import dts.data.UserRole;
 
 @Service
@@ -25,7 +24,6 @@ public class UserServiceImplementation implements UsersService, CommandLineRunne
 	private String helperName;
 	private Map<String, UserEntity> usersStore;
 	private UserConverter userConverter;
-	private UserIdConverter userIdConverter;
 	private String delimiter = "$";
 
 	@Value("${spring.application.name:demoSpace}")
@@ -42,10 +40,6 @@ public class UserServiceImplementation implements UsersService, CommandLineRunne
 	public void setUserConverter(UserConverter userConverter) {
 		this.userConverter = userConverter;
 	}
-	@Autowired
-	public void setUserIdConverter(UserIdConverter userIdConverter) {
-		this.userIdConverter = userIdConverter;
-	}
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -59,8 +53,7 @@ public class UserServiceImplementation implements UsersService, CommandLineRunne
 		UserEntity userEntity = this.userConverter.toEntity(user);
 	
 		// MOCKUP database store of the entity
-		String key = helperName + delimiter + userEntity.getUserId().getEmail();
-		this.usersStore.put(key, userEntity);
+		this.usersStore.put(userEntity.getUserId(), userEntity);
 		return this.userConverter.toBoundary(userEntity);
 	}
 
@@ -76,10 +69,7 @@ public class UserServiceImplementation implements UsersService, CommandLineRunne
 	@Override
 	public UserBoundary updateUser(String userSpace, String userEmail, UserBoundary update) throws Exception {
 		String key = userSpace + delimiter + userEmail;
-		if (usersStore.containsKey(key)) {
-			UserEntity old = usersStore.get(key);
-			UserIdEntity idOld = old.getUserId();
-			update.setUserId(this.userIdConverter.toBoundary(idOld));
+		if (usersStore.containsKey(key) && update.getUserId().getEmail() == userEmail && update.getUserId().getSpace() == userSpace) {
 			usersStore.put(key, this.userConverter.toEntity(update));
 			return this.userConverter.toBoundary(usersStore.get(key));
 		} else
