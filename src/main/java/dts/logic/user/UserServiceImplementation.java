@@ -48,10 +48,10 @@ public class UserServiceImplementation implements UsersService, CommandLineRunne
 
 	@Override
 	public UserBoundary createUser(NewUserBoundary newUser) {
-		UserIdBoundary userId = new UserIdBoundary(this.helperName,newUser.getEmail());
-		UserBoundary user = new UserBoundary(userId,newUser.getRole(),newUser.getUsername(),newUser.getAvatar());
+		UserIdBoundary userId = new UserIdBoundary(this.helperName, newUser.getEmail());
+		UserBoundary user = new UserBoundary(userId, newUser.getRole(), newUser.getUsername(), newUser.getAvatar());
 		UserEntity userEntity = this.userConverter.toEntity(user);
-	
+
 		// MOCKUP database store of the entity
 		this.usersStore.put(userEntity.getUserId(), userEntity);
 		return this.userConverter.toBoundary(userEntity);
@@ -69,9 +69,13 @@ public class UserServiceImplementation implements UsersService, CommandLineRunne
 	@Override
 	public UserBoundary updateUser(String userSpace, String userEmail, UserBoundary update) throws Exception {
 		String key = userSpace + delimiter + userEmail;
-		if (usersStore.containsKey(key) && update.getUserId().getEmail() == userEmail && update.getUserId().getSpace() == userSpace) {
-			usersStore.put(key, this.userConverter.toEntity(update));
-			return this.userConverter.toBoundary(usersStore.get(key));
+		UserEntity old = usersStore.get(key);
+
+		if (old != null) {
+			UserEntity entity = this.userConverter.toEntity(update);
+			entity.setUserId(old.getUserId());
+			usersStore.put(key, entity);
+			return this.userConverter.toBoundary(entity);
 		} else
 			throw new RuntimeException();
 	}
