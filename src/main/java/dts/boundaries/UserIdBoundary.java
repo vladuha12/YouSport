@@ -43,5 +43,4 @@ public class UserIdBoundary {
 	public String toString() {
 		return this.space + "$" + this.email;
 	}
-
 }

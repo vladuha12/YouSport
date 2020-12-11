@@ -23,7 +23,7 @@ public class UserController {
 
 	// Create a new user
 	@RequestMapping(path = "/dts/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary storeNewUser(@RequestBody NewUserBoundary newUser) {
+	public UserBoundary storeNewUser(@RequestBody NewUserBoundary newUser) throws Exception {
 		return userHandler.createUser(newUser);
 	}
 
