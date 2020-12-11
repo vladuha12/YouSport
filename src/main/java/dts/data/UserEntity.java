@@ -5,13 +5,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "USERS")
 public class UserEntity {
 	private String userId;
 	private UserRole role;
 	private String username;
 	private String avatar;
-	
+
 	public UserEntity() {
 	}
 
@@ -46,7 +46,7 @@ public class UserEntity {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-	
+
 	@Id
 	public String getUserId() {
 		return userId;
@@ -80,6 +80,5 @@ public class UserEntity {
 			return false;
 		return true;
 	}
-	
 
 }

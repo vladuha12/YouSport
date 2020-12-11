@@ -3,12 +3,13 @@ package dts.data;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "ITEMS")
@@ -80,12 +81,11 @@ public class ItemEntity {
 		this.active = active;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
 	public UserEntity getCreatedBy() {
 		return createdBy;
 	}
 
-	// @ManyToOne(fetch = FetchType.LAZY)
-	@Transient
 	public void setCreatedBy(UserEntity createdBy) {
 		this.createdBy = createdBy;
 	}
