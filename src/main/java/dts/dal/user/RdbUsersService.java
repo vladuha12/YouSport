@@ -92,7 +92,6 @@ public class RdbUsersService implements EnhancedUsersService {
 	public void deleteAllUsers(String adminSpace, String adminEmail) {
 		if (validateAdmin(adminSpace, adminEmail))
 			this.usersDao.deleteAll();
-			System.err.println("DELETED");
 	}
 
 	public boolean validateAdmin(String adminSpace, String adminEmail) {
