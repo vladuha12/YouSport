@@ -12,16 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 import dts.boundaries.OperationBoundary;
 import dts.boundaries.UserBoundary;
 import dts.logic.item.EnhancedItemsService;
+import dts.logic.user.EnhancedUsersService;
 import dts.logic.user.UsersService;
 
 @RestController
 public class AdminController {
-	private UsersService userHandler;
+	private EnhancedUsersService userHandler;
 	private EnhancedItemsService itemsHandler;
 
 	// Initialize UserService handler
 	@Autowired
-	public void setUserHandler(UsersService userHandler) {
+	public void setUserHandler(EnhancedUsersService userHandler) {
 		this.userHandler = userHandler;
 	}
 

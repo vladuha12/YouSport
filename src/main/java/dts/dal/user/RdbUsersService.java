@@ -7,6 +7,7 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import dts.boundaries.NewUserBoundary;
@@ -17,6 +18,7 @@ import dts.data.UserRole;
 import dts.logic.user.EnhancedUsersService;
 import dts.logic.user.UserConverter;
 
+@Service
 public class RdbUsersService implements EnhancedUsersService {
 	private UsersDao usersDao;
 	private UserConverter userConverter;
@@ -86,11 +88,11 @@ public class RdbUsersService implements EnhancedUsersService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional
 	public void deleteAllUsers(String adminSpace, String adminEmail) {
 		if (validateAdmin(adminSpace, adminEmail))
 			this.usersDao.deleteAll();
-
+			System.err.println("DELETED");
 	}
 
 	public boolean validateAdmin(String adminSpace, String adminEmail) {

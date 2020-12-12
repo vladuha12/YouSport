@@ -18,7 +18,7 @@ import dts.boundaries.UserIdBoundary;
 import dts.data.UserEntity;
 import dts.data.UserRole;
 
-@Service
+//@Service
 public class UserServiceImplementation implements UsersService, CommandLineRunner {
 
 	private String helperName;
