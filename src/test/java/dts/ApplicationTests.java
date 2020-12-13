@@ -48,15 +48,6 @@ public class ApplicationTests {
 	
 	}
 	
-////------------- Users related API test	--------------- ////
-	
-//// Test POST	////
-	
-	@Test
-	public void testDatabaseIsEmptyByDefault() throws Exception {
-		// Can't be tested yet.
-	}
-	
 	@AfterEach   // Delete all Delete That is possible (In edition doing Delete test)
 	public void tearDown() {
 		String urlTest;
@@ -69,6 +60,17 @@ public class ApplicationTests {
 	}
 	
 	
+////------------- Users related API test	--------------- ////
+	
+//// Test POST	////
+	
+	@Test
+	public void testDatabaseIsEmptyByDefault() throws Exception {
+		// Can't be tested yet.
+	}
+	
+
+	
 	@Test
 	public void CreateNewUser () throws Exception
 	{
@@ -77,9 +79,11 @@ public class ApplicationTests {
 		    urlTest = this.url + "/users";
 	       //GIVEN the server is up and empty (Tested)
 		   //Set time
-	       //WHEN I POST /dts/users using (Null Json)
+	       //WHEN I POST /dts/users using (test Email)
+			HashMap<Object, Object> newuser = new HashMap<>();
+			newuser.put("email","demo@maildomain.com");
 			UserBoundary actual = this.restTemplate
-					.postForObject(urlTest, new HashMap<>(), UserBoundary.class);
+					.postForObject(urlTest, newuser, UserBoundary.class);
 		   //THEN the result HTTP STATUS 2xx 
 		   //AND the server returns the JOSN (User boundary - player) //Date bigger to test if new
 			assertThat(actual.getUserId())
@@ -185,10 +189,17 @@ public class ApplicationTests {
 	{
 		String urlTest;
 		//Set URL for POST Item
-		urlTest = this.url + "/items/JunitTest/JunitTester@Gmail.com";
-	       //GIVEN the server is up and empty (Tested)
+	       //GIVEN the server is up and Not empty (Tested)
 		   //Set time
 		    long now = System.currentTimeMillis();
+		    //Create new user as if no users no items available.
+			urlTest = this.url + "/users";
+			HashMap<Object, Object> newuser = new HashMap<>();
+			newuser.put("email","demo@maildomain.com");
+			UserBoundary test = this.restTemplate.postForObject(urlTest, newuser, UserBoundary.class);
+			assertThat(test.getClass()).hasSameClassAs(UserBoundary.class);
+			
+			urlTest = this.url + "/items/JunitTest/JunitTester@Gmail.com";
 	       //WHEN I POST /dts/items/JunitTest/JunitTester@Gmail.com using (Null Json)
 			ItemBoundary actual = this.restTemplate
 					.postForObject(urlTest, new HashMap<>(), ItemBoundary.class);
@@ -221,9 +232,14 @@ public class ApplicationTests {
 		ItemBoundary newItem = this.restTemplate.postForObject(urlTest, new HashMap<>(), ItemBoundary.class);
 			assertThat(newItem.getClass()).hasSameClassAs(ItemBoundary.class); // Fast test we received Item
 			itemID = newItem.getItemId().getId(); // Get the UNIQ id that is Created
+		    //Create new user as if no users no items available.
+			urlTest = this.url + "/users";
+			HashMap<Object, Object> newuser = new HashMap<>();
+			newuser.put("email","demo@maildomain.com");
+			UserBoundary test = this.restTemplate.postForObject(urlTest, newuser, UserBoundary.class);
+			assertThat(test.getClass()).hasSameClassAs(UserBoundary.class);
 			
-			
-		//Set URL for GET /dts/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}
+		//Set URL for GET /dts/items/{userSpace}/{userEmail}/{itemSpace}/{itemId} 
 		urlTest = this.url + "/items/" + Application.APPLICATION_NAME +"/demo@maildomain.com/" + Application.APPLICATION_NAME +"/"+ itemID  ;
 	       //GIVEN the server is up (Tested)
 	       //WHEN I GET  /dts/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}
@@ -373,6 +389,7 @@ public class ApplicationTests {
 
 ////------------- Admin API test	--------------- ////	
 	
+	/*
 	@Test
 	public void DeleteAllUsersAPI () throws Exception {
 		String urlTest;
@@ -422,7 +439,7 @@ public class ApplicationTests {
 			//assertThat(deletedUsers).hasSize(0);
 	}
 
-	
+	*/
 	
 	
 	
