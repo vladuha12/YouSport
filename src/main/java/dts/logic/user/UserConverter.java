@@ -2,6 +2,7 @@ package dts.logic.user;
 
 import org.springframework.stereotype.Component;
 
+import dts.Application;
 import dts.boundaries.UserBoundary;
 import dts.boundaries.UserIdBoundary;
 import dts.data.UserEntity;
@@ -17,7 +18,7 @@ public class UserConverter {
 			entity.setUserId(newUser.getUserId().toString());
 		} else
 			entity.setUserId(new UserIdBoundary().toString());
-		
+
 		if (newUser.getRole() != null)
 			entity.setRole(newUser.getRole());
 		if (newUser.getUsername() != null)
@@ -36,7 +37,7 @@ public class UserConverter {
 			boundary.setUserId(fromStringToUserIdBoundary(entity.getUserId()));
 		} else
 			boundary.setUserId(new UserIdBoundary());
-		
+
 		if (entity.getRole() != null)
 			boundary.setRole(entity.getRole());
 		if (entity.getUsername() != null)
@@ -47,9 +48,19 @@ public class UserConverter {
 		return boundary;
 	}
 
+	public UserEntity toEntity(UserIdBoundary userId) {
+		UserEntity entity = new UserEntity();
+		if (userId.toString() != null) {
+			entity.setUserId(userId.toString());
+		} else
+			entity.setUserId(new UserIdBoundary().toString());
+
+		return entity;
+	}
+
 	private UserIdBoundary fromStringToUserIdBoundary(String userId) {
 		if (userId != null) {
-			String[] args = userId.split("\\$");
+			String[] args = userId.split(Application.ID_DELIMITER);
 			return new UserIdBoundary(args[0], args[1]);
 		} else {
 			return null;

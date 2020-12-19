@@ -10,18 +10,15 @@ public class ItemBoundary {
 	private String type;
 	private Date createdTimestamp;
 	private Boolean active;
-	private UserBoundary createdBy;
+	private UserIdWrapperBoundary createdBy;
 	private LocationBoundary location;
 	private Map<String, Object> itemAttributes;
 
 	public ItemBoundary() {
 
 		this.itemId = new IdBoundary();
-		this.type = "TEST TYPE";
-		this.name = "TEST ITEM NAME";
 		this.active = true;
 		this.createdTimestamp = new Date();
-		this.createdBy = new UserBoundary();
 		this.location = new LocationBoundary();
 		this.itemAttributes = new HashMap<>();
 		this.itemAttributes.put("key1", "key 1 test");
@@ -74,12 +71,12 @@ public class ItemBoundary {
 		this.active = active;
 	}
 
-	public UserBoundary getCreatedBy() {
+	public UserIdWrapperBoundary getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(UserBoundary createdBy) {
-		this.createdBy = createdBy;
+	public void setCreatedBy(UserIdWrapperBoundary createdBy) {
+		this.createdBy = new UserIdWrapperBoundary(createdBy.getUserId());
 	}
 
 	public LocationBoundary getLocation() {
@@ -100,9 +97,9 @@ public class ItemBoundary {
 
 	@Override
 	public String toString() {
-		return "ItemBoundary [itemId=" + itemId + ", name=" + name + ", type=" + type + ", createdTimestamp=" + createdTimestamp
-				+ ", active=" + active + ", createdBy=" + createdBy + ", location=" + location + ", itemAttributes="
-				+ itemAttributes + "]";
+		return "ItemBoundary [itemId=" + itemId + ", name=" + name + ", type=" + type + ", createdTimestamp="
+				+ createdTimestamp + ", active=" + active + ", createdBy=" + createdBy + ", location=" + location
+				+ ", itemAttributes=" + itemAttributes + "]";
 	}
 
 }

@@ -3,6 +3,8 @@ package dts.dal.item;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -10,23 +12,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import dts.Application;
 import dts.boundaries.IdBoundary;
 import dts.boundaries.ItemBoundary;
+import dts.boundaries.ItemIdBoundary;
+import dts.dal.IdGeneratorEntityDao;
+import dts.data.IdGeneratorEntity;
 import dts.data.ItemEntity;
 import dts.logic.item.EnhancedItemsService;
 import dts.logic.item.ItemConverter;
-import dts.util.ObjectNotFoundException;
+import dts.util.ObjNotFoundException;
 
 @Service
 public class RdbItemsService implements EnhancedItemsService {
 	private ItemsDao itemsDao;
 	private ItemConverter itemConverter;
+	private IdGeneratorEntityDao IdGeneratorEntityDao;
 
 	@Autowired
-	public RdbItemsService(ItemsDao itemsDao, ItemConverter itemConverter) {
+	public RdbItemsService(ItemsDao itemsDao, ItemConverter itemConverter, IdGeneratorEntityDao IdGeneratorEntityDao) {
 		super();
 		this.itemsDao = itemsDao;
 		this.itemConverter = itemConverter;
+		this.IdGeneratorEntityDao = IdGeneratorEntityDao;
 	}
 
 	@Override
@@ -34,7 +42,20 @@ public class RdbItemsService implements EnhancedItemsService {
 	public ItemBoundary create(String managerSpace, String managerEmail, ItemBoundary newItem) throws Exception {
 		try {
 			ItemEntity entity = this.itemConverter.toEntity(newItem);
-			IdBoundary id = new IdBoundary();
+			if (entity.getName() == null || entity.getName().trim().isEmpty()) {
+				throw new RuntimeException("item name can not be empty");
+			}
+
+			if (entity.getType() == null || entity.getType().trim().isEmpty()) {
+				throw new RuntimeException("item type can not be empty");
+			}
+
+			IdGeneratorEntity idGeneratorEntity = new IdGeneratorEntity();
+			idGeneratorEntity = this.IdGeneratorEntityDao.save(idGeneratorEntity);
+			UUID newId = idGeneratorEntity.getId();
+			this.IdGeneratorEntityDao.deleteById(newId);
+
+			IdBoundary id = new IdBoundary(newId.toString());
 			entity.setItemId(id.toString());
 			entity.setCreatedTimestamp(new Date());
 
@@ -48,18 +69,25 @@ public class RdbItemsService implements EnhancedItemsService {
 	@Transactional
 	public ItemBoundary update(String managerSpace, String managerEmail, String itemSpace, String itemId,
 			ItemBoundary update) throws Exception {
-		Optional<ItemEntity> exiting = this.itemsDao.findById(itemId);
+		Optional<ItemEntity> exiting = this.itemsDao.findById(itemSpace + Application.ID_DELIMITER + itemId);
 
 		if (exiting.isPresent()) {
 			ItemEntity existingEntity = exiting.get();
 			ItemEntity updateEntity = this.itemConverter.toEntity(update);
+			if (updateEntity.getName() == null || updateEntity.getName().trim().isEmpty()) {
+				throw new RuntimeException("item name can not be empty");
+			}
+
+			if (updateEntity.getType() == null || updateEntity.getType().trim().isEmpty()) {
+				throw new RuntimeException("item type can not be empty");
+			}
 			updateEntity.setItemId(existingEntity.getItemId());
 			updateEntity.setCreatedTimestamp(existingEntity.getCreatedTimestamp());
 			updateEntity.setCreatedBy(existingEntity.getCreatedBy());
 
 			return this.itemConverter.toBoundary(this.itemsDao.save(updateEntity));
 		} else {
-			throw new ObjectNotFoundException("item with id: " + itemId + " could not be found");
+			throw new ObjNotFoundException("item with id: " + itemId + " could not be found");
 		}
 	}
 
@@ -74,12 +102,12 @@ public class RdbItemsService implements EnhancedItemsService {
 	@Transactional(readOnly = true)
 	public ItemBoundary getSpecificItem(String userSpace, String userEmail, String itemSpace, String itemId)
 			throws Exception {
-		Optional<ItemEntity> exiting = this.itemsDao.findById(itemId);
+		Optional<ItemEntity> exiting = this.itemsDao.findById(itemSpace + Application.ID_DELIMITER + itemId);
 
 		if (exiting.isPresent()) {
 			return this.itemConverter.toBoundary(exiting.get());
 		} else {
-			throw new ObjectNotFoundException("item with id: " + itemId + " could not be found");
+			throw new ObjNotFoundException("item with id: " + itemId + " could not be found");
 		}
 	}
 
@@ -89,4 +117,56 @@ public class RdbItemsService implements EnhancedItemsService {
 		this.itemsDao.deleteAll();
 
 	}
+
+	@Override
+	@Transactional
+	public void bind(String managerSpace, String managerEmail, String itemSpace, String itemId, ItemIdBoundary child) {
+		Optional<ItemEntity> parent = this.itemsDao.findById(itemSpace + Application.ID_DELIMITER + itemId);
+		if (parent.isPresent()) {
+			Optional<ItemEntity> childToBind = this.itemsDao.findById(child.toString());
+			if (childToBind.isPresent()) {
+				ItemEntity parentEntity = parent.get();
+				ItemEntity childEntity = childToBind.get();
+				parentEntity.addChild(childEntity);
+				childEntity.addParent(parentEntity);
+				this.itemsDao.save(parentEntity);
+				this.itemsDao.save(childEntity);
+			} else {
+				throw new ObjNotFoundException("child item with id: " + child.getId() + " could not be found");
+			}
+		} else {
+			throw new ObjNotFoundException("parent item with id: " + itemId + " could not be found");
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<ItemBoundary> getChildren(String userSpace, String userEmail, String itemSpace, String itemId) {
+		Optional<ItemEntity> parent = this.itemsDao.findById(itemSpace + Application.ID_DELIMITER + itemId);
+		if (parent.isPresent()) {
+			ItemEntity parentEntity = parent.get();
+			Set<ItemEntity> cildren = parentEntity.getChildren();
+			return StreamSupport.stream(cildren.spliterator(), false)
+					.map(entity -> this.itemConverter.toBoundary(entity)).collect(Collectors.toList());
+
+		} else {
+			throw new ObjNotFoundException("parent item with id: " + itemId + " could not be found");
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<ItemBoundary> getParents(String userSpace, String userEmail, String itemSpace, String itemId) {
+		Optional<ItemEntity> child = this.itemsDao.findById(itemSpace + Application.ID_DELIMITER + itemId);
+		if (child.isPresent()) {
+			ItemEntity childEntity = child.get();
+			Set<ItemEntity> parents = childEntity.getParents();
+			return StreamSupport.stream(parents.spliterator(), false)
+					.map(entity -> this.itemConverter.toBoundary(entity)).collect(Collectors.toList());
+
+		} else {
+			throw new ObjNotFoundException("child item with id: " + itemId + " could not be found");
+		}
+	}
+
 }

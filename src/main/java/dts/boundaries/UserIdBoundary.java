@@ -16,7 +16,7 @@ public class UserIdBoundary {
 		this.space = Application.APPLICATION_NAME;
 		this.email = email;
 	}
-	
+
 	public UserIdBoundary(String email) {
 		super();
 		this.space = Application.APPLICATION_NAME;
@@ -41,6 +41,6 @@ public class UserIdBoundary {
 
 	@Override
 	public String toString() {
-		return this.space + "$" + this.email;
+		return this.space + Application.ID_DELIMITER + this.email;
 	}
 }

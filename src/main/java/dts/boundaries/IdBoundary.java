@@ -42,6 +42,6 @@ public class IdBoundary {
 
 	@Override
 	public String toString() {
-		return this.space + "$" + this.id;
+		return this.space + Application.ID_DELIMITER + this.id;
 	}
 }
