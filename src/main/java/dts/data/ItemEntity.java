@@ -1,11 +1,14 @@
 package dts.data;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -22,6 +25,8 @@ public class ItemEntity {
 	private UserEntity createdBy;
 	private String location;
 	private String itemAttributes;
+	private Set<ItemEntity> children;
+	private Set<ItemEntity> parents;
 
 	public ItemEntity() {
 	}
@@ -107,6 +112,24 @@ public class ItemEntity {
 		this.itemAttributes = itemAttributes;
 	}
 
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "children")
+	public Set<ItemEntity> getParents() {
+		return parents;
+	}
+
+	public void setParents(Set<ItemEntity> parents) {
+		this.parents = parents;
+	}
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	public Set<ItemEntity> getChildren() {
+		return children;
+	}
+
+	public void setChildren(Set<ItemEntity> children) {
+		this.children = children;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -130,6 +153,20 @@ public class ItemEntity {
 		} else if (!itemId.equals(other.itemId))
 			return false;
 		return true;
+	}
+
+	public void addChild(ItemEntity child) {
+		if (this.children == null) {
+			this.children = new HashSet<ItemEntity>();
+		}
+		this.children.add(child);
+	}
+
+	public void addParent(ItemEntity parent) {
+		if (this.parents == null) {
+			this.parents = new HashSet<ItemEntity>();
+		}
+		this.parents.add(parent);
 	}
 
 }

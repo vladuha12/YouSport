@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import dts.boundaries.ItemBoundary;
+import dts.boundaries.ItemIdBoundary;
 import dts.logic.item.EnhancedItemsService;
 
 @RestController
@@ -32,11 +33,32 @@ public class ItemController {
 		return itemsHandler.getAll(userSpace, userEmail).toArray(new ItemBoundary[0]);
 	}
 
+	@RequestMapping(method = RequestMethod.GET, path = "/dts/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}/children", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ItemBoundary[] children(@PathVariable("userSpace") String userSpace,
+			@PathVariable("userEmail") String userEmail, @PathVariable("itemSpace") String itemSpace,
+			@PathVariable("itemId") String itemId) {
+		return itemsHandler.getChildren(userSpace, userEmail, itemSpace, itemId).toArray(new ItemBoundary[0]);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, path = "/dts/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}/parents", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ItemBoundary[] parents(@PathVariable("userSpace") String userSpace,
+			@PathVariable("userEmail") String userEmail, @PathVariable("itemSpace") String itemSpace,
+			@PathVariable("itemId") String itemId) {
+		return itemsHandler.getParents(userSpace, userEmail, itemSpace, itemId).toArray(new ItemBoundary[0]);
+	}
+
 	@RequestMapping(method = RequestMethod.PUT, path = "/dts/items/{managerSpace}/{managerEmail}/{itemSpace}/{itemId}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary updateExistingItem(@PathVariable("managerSpace") String managerSpace,
 			@PathVariable("managerEmail") String managerEmail, @PathVariable("itemSpace") String itemSpace,
 			@PathVariable("itemId") String itemId, @RequestBody ItemBoundary updatedItem) throws Exception {
 		return itemsHandler.update(managerSpace, managerEmail, itemSpace, itemId, updatedItem);
+	}
+
+	@RequestMapping(method = RequestMethod.PUT, path = "/dts/items/{managerSpace}/{managerEmail}/{itemSpace}/{itemId}/children", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void bindChild(@PathVariable("managerSpace") String managerSpace,
+			@PathVariable("managerEmail") String managerEmail, @PathVariable("itemSpace") String itemSpace,
+			@PathVariable("itemId") String itemId, @RequestBody ItemIdBoundary childItem) throws Exception {
+		itemsHandler.bind(managerSpace, managerEmail, itemSpace, itemId, childItem);
 	}
 
 	@RequestMapping(path = "/dts/items/{managerSpace}/{managerEmail}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

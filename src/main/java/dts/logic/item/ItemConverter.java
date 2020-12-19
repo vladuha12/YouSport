@@ -10,13 +10,12 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dts.Application;
 import dts.boundaries.IdBoundary;
 import dts.boundaries.ItemBoundary;
 import dts.boundaries.LocationBoundary;
-import dts.boundaries.UserBoundary;
-import dts.boundaries.UserIdBoundary;
+import dts.boundaries.UserIdWrapperBoundary;
 import dts.data.ItemEntity;
-import dts.data.UserRole;
 import dts.logic.user.UserConverter;
 
 @Component
@@ -44,7 +43,8 @@ public class ItemConverter {
 			boundary.setItemId(new IdBoundary());
 
 		if (entity.getCreatedBy() != null) {
-			boundary.setCreatedBy(this.userConverter.toBoundary((entity.getCreatedBy())));
+			boundary.setCreatedBy(
+					new UserIdWrapperBoundary(this.userConverter.toBoundary((entity.getCreatedBy())).getUserId()));
 		}
 
 		if (entity.getLocation() != null) {
@@ -83,7 +83,7 @@ public class ItemConverter {
 			entity.setItemId(new IdBoundary().toString());
 
 		if (boundary.getCreatedBy() != null) {
-			entity.setCreatedBy(this.userConverter.toEntity(boundary.getCreatedBy()));
+			entity.setCreatedBy(this.userConverter.toEntity(boundary.getCreatedBy().getUserId()));
 		}
 
 		if (boundary.getLocation() != null) {
@@ -141,21 +141,20 @@ public class ItemConverter {
 
 	private IdBoundary fromStringToIdBoundary(String id) {
 		if (id != null) {
-			String[] args = id.split("\\$");
+			String[] args = id.split(Application.ID_DELIMITER);
+			// String[] args = id.split(Application.ID_DELIMITER);
 			return new IdBoundary(args[0], args[1]);
 		} else {
 			return null;
 		}
 	}
 
-	private UserBoundary fromStringToUserBoundary(String name) {
-		if (name != null) {
-			String[] args = name.split("&");
-			return new UserBoundary(fromStringToUserIdBoundary(args[0]), UserRole.valueOf(args[1]), args[2], args[3]);
-		} else {
-			return null;
-		}
-	}
+	/*
+	 * private UserBoundary fromStringToUserBoundary(String name) { if (name !=
+	 * null) { String[] args = name.split("&"); return new
+	 * UserBoundary(fromStringToUserIdBoundary(args[0]), UserRole.valueOf(args[1]),
+	 * args[2], args[3]); } else { return null; } }
+	 */
 
 	private LocationBoundary fromStringToLocationBoundary(String location) {
 		if (location != null) {
@@ -166,11 +165,9 @@ public class ItemConverter {
 		}
 	}
 
-	private UserIdBoundary fromStringToUserIdBoundary(String id) {
-		if (id != null) {
-			String[] args = id.split("\\$");
-			return new UserIdBoundary(args[0], args[1]);
-		} else
-			return null;
-	}
+	/*
+	 * private UserIdBoundary fromStringToUserIdBoundary(String id) { if (id !=
+	 * null) { String[] args = id.split(Application.ID_DELIMITER); return new
+	 * UserIdBoundary(args[0], args[1]); } else return null; }
+	 */
 }
