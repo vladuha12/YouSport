@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dts.boundaries.IdBoundary;
 import dts.boundaries.OperationBoundary;
 import dts.data.OperationEntity;
 
@@ -19,7 +20,6 @@ import dts.data.OperationEntity;
 public class OperationsServiceImplementation implements OperationsService {
 
 	private Map<String, OperationEntity> operationsStorage;
-	// private AtomicLong idGenerator;
 	private OperationsConverter operationsConverter;
 
 	@Autowired
@@ -30,12 +30,12 @@ public class OperationsServiceImplementation implements OperationsService {
 	@PostConstruct
 	public void init() {
 		this.operationsStorage = Collections.synchronizedMap(new HashMap<>());
-		// this.idGenerator = new AtomicLong(1l);
 	}
 
 	@Override
 	public Object invokeOperation(OperationBoundary operation) {
 
+		operation.setOperationId(new IdBoundary());
 		operation.setCreatedTimestamp(new Date());
 
 		OperationEntity entity = this.operationsConverter.toEntity(operation);
@@ -47,20 +47,21 @@ public class OperationsServiceImplementation implements OperationsService {
 	}
 
 	@Override
-	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail) {
+	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail) throws Exception {
 
 		if (adminSpace != null && adminEmail != null) {
 			return this.operationsStorage.values().stream().map(entity -> operationsConverter.toBoundary(entity))
 					.collect(Collectors.toList());
-		}
-		return null;
+		} else
+			throw new Exception("Bad Credentials");
 	}
 
 	@Override
-	public void deleteAllActions(String adminSpace, String adminEmail) {
+	public void deleteAllActions(String adminSpace, String adminEmail) throws Exception {
 		if (adminSpace != null && adminEmail != null)
 			this.operationsStorage.clear();
-
+		else
+			throw new Exception("Bad Credentials");
 	}
 
 }
