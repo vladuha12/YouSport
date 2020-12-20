@@ -13,12 +13,11 @@ public class UserConverter {
 	// Converts from UserBoundary to UserEntity
 	public UserEntity toEntity(UserBoundary newUser) {
 		UserEntity entity = new UserEntity();
-
+		
 		if (newUser.getUserId() != null) {
 			entity.setUserId(newUser.getUserId().toString());
 		} else
 			entity.setUserId(new UserIdBoundary().toString());
-
 		if (newUser.getRole() != null)
 			entity.setRole(newUser.getRole());
 		if (newUser.getUsername() != null)
@@ -37,7 +36,6 @@ public class UserConverter {
 			boundary.setUserId(fromStringToUserIdBoundary(entity.getUserId()));
 		} else
 			boundary.setUserId(new UserIdBoundary());
-
 		if (entity.getRole() != null)
 			boundary.setRole(entity.getRole());
 		if (entity.getUsername() != null)
