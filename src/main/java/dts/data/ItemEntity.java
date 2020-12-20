@@ -1,34 +1,50 @@
 package dts.data;
 
 import java.util.Date;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+@Entity
+@Table(name = "ITEMS")
 public class ItemEntity {
 	private String itemId;
 	private String name;
 	private String type;
-	private Date creationDate;
+	private Date createdTimestamp;
 	private Boolean active;
-	private String createdBy;
+	private UserEntity createdBy;
 	private String location;
-	private Map<String, Object> itemAttributes;
+	private String itemAttributes;
+	private Set<ItemEntity> children;
+	private Set<ItemEntity> parents;
 
 	public ItemEntity() {
 	}
 
-	public ItemEntity(String itemId, String name, String type, Date creationDate, Boolean active,
-			String createdBy, String location, Map<String, Object> itemAttributes) {
+	public ItemEntity(String itemId, String name, String type, Date createdTimestamp, Boolean active,
+			UserEntity createdBy, String location, String itemAttributes) {
 		super();
 		this.itemId = itemId;
 		this.name = name;
 		this.type = type;
-		this.creationDate = creationDate;
+		this.createdTimestamp = createdTimestamp;
 		this.active = active;
 		this.createdBy = createdBy;
 		this.location = location;
 		this.itemAttributes = itemAttributes;
 	}
 
+	@Id
 	public String getItemId() {
 		return itemId;
 	}
@@ -53,12 +69,13 @@ public class ItemEntity {
 		this.type = type;
 	}
 
-	public Date getCreationDate() {
-		return creationDate;
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date getCreatedTimestamp() {
+		return createdTimestamp;
 	}
 
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
+	public void setCreatedTimestamp(Date createdTimestamp) {
+		this.createdTimestamp = createdTimestamp;
 	}
 
 	public Boolean getActive() {
@@ -69,11 +86,12 @@ public class ItemEntity {
 		this.active = active;
 	}
 
-	public String getCreatedBy() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	public UserEntity getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(UserEntity createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -85,12 +103,70 @@ public class ItemEntity {
 		this.location = location;
 	}
 
-	public Map<String, Object> getItemAttributes() {
+	@Lob
+	public String getItemAttributes() {
 		return itemAttributes;
 	}
 
-	public void setItemAttributes(Map<String, Object> itemAttributes) {
+	public void setItemAttributes(String itemAttributes) {
 		this.itemAttributes = itemAttributes;
+	}
+
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "children")
+	public Set<ItemEntity> getParents() {
+		return parents;
+	}
+
+	public void setParents(Set<ItemEntity> parents) {
+		this.parents = parents;
+	}
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	public Set<ItemEntity> getChildren() {
+		return children;
+	}
+
+	public void setChildren(Set<ItemEntity> children) {
+		this.children = children;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((itemId == null) ? 0 : itemId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ItemEntity other = (ItemEntity) obj;
+		if (itemId == null) {
+			if (other.itemId != null)
+				return false;
+		} else if (!itemId.equals(other.itemId))
+			return false;
+		return true;
+	}
+
+	public void addChild(ItemEntity child) {
+		if (this.children == null) {
+			this.children = new HashSet<ItemEntity>();
+		}
+		this.children.add(child);
+	}
+
+	public void addParent(ItemEntity parent) {
+		if (this.parents == null) {
+			this.parents = new HashSet<ItemEntity>();
+		}
+		this.parents.add(parent);
 	}
 
 }

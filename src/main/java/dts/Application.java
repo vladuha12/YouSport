@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Application {
 
 	public static String APPLICATION_NAME;
+	public static String ID_DELIMITER = "#";
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);

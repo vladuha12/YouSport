@@ -1,4 +1,4 @@
-package dts.logic;
+package dts.logic.user;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,18 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
+
+import dts.boundaries.NewUserBoundary;
 import dts.boundaries.UserBoundary;
+import dts.boundaries.UserIdBoundary;
 import dts.data.UserEntity;
-import dts.data.UserIdEntity;
 import dts.data.UserRole;
 
-@Service
+//@Service
 public class UserServiceImplementation implements UsersService, CommandLineRunner {
 
 	private String helperName;
 	private Map<String, UserEntity> usersStore;
 	private UserConverter userConverter;
-	private UserIdConverter userIdConverter;
 	private String delimiter = "$";
 
 	@Value("${spring.application.name:demoSpace}")
@@ -35,16 +36,9 @@ public class UserServiceImplementation implements UsersService, CommandLineRunne
 		this.usersStore = Collections.synchronizedMap(new HashMap<>()); // thread safe map
 	}
 
-	// Initialize UserConverter
 	@Autowired
 	public void setUserConverter(UserConverter userConverter) {
 		this.userConverter = userConverter;
-	}
-	
-	// Initialize UserIdConverter
-	@Autowired
-	public void setUserIdConverter(UserIdConverter userIdConverter) {
-		this.userIdConverter = userIdConverter;
 	}
 
 	@Override
@@ -52,19 +46,17 @@ public class UserServiceImplementation implements UsersService, CommandLineRunne
 		System.err.println(this.helperName);
 	}
 
-	// Create user service API
 	@Override
-	public UserBoundary createUser(UserBoundary newUser) {
-		newUser.setSpace(helperName);
-		UserEntity userEntity = this.userConverter.toEntity(newUser);
+	public UserBoundary createUser(NewUserBoundary newUser) {
+		UserIdBoundary userId = new UserIdBoundary(this.helperName, newUser.getEmail());
+		UserBoundary user = new UserBoundary(userId, newUser.getRole(), newUser.getUsername(), newUser.getAvatar());
+		UserEntity userEntity = this.userConverter.toEntity(user);
 
 		// MOCKUP database store of the entity
-		String key = helperName + delimiter + userEntity.getUserId().getEmail();
-		this.usersStore.put(key, userEntity);
+		this.usersStore.put(userEntity.getUserId(), userEntity);
 		return this.userConverter.toBoundary(userEntity);
 	}
 
-	// Login user service API
 	@Override
 	public UserBoundary login(String userSpace, String userEmail) throws Exception {
 		String key = userSpace + delimiter + userEmail;
@@ -74,21 +66,20 @@ public class UserServiceImplementation implements UsersService, CommandLineRunne
 			throw new RuntimeException();
 	}
 
-	// Update user service API
 	@Override
 	public UserBoundary updateUser(String userSpace, String userEmail, UserBoundary update) throws Exception {
 		String key = userSpace + delimiter + userEmail;
-		if (usersStore.containsKey(key)) {
-			UserEntity old = usersStore.get(key);
-			UserIdEntity idOld = old.getUserId();
-			update.setUserId(this.userIdConverter.toBoundary(idOld));
-			usersStore.put(key, this.userConverter.toEntity(update));
-			return this.userConverter.toBoundary(usersStore.get(key));
+		UserEntity old = usersStore.get(key);
+
+		if (old != null) {
+			UserEntity entity = this.userConverter.toEntity(update);
+			entity.setUserId(old.getUserId());
+			usersStore.put(key, entity);
+			return this.userConverter.toBoundary(entity);
 		} else
 			throw new RuntimeException();
 	}
-	
-	// Get all users service API
+
 	@Override
 	public List<UserBoundary> getAllUsers(String adminSpace, String adminEmail) {
 		if (validateAdmin(adminSpace, adminEmail))
@@ -98,14 +89,12 @@ public class UserServiceImplementation implements UsersService, CommandLineRunne
 			return null;
 	}
 
-	// Delete all users service API
 	@Override
 	public void deleteAllUsers(String adminSpace, String adminEmail) {
 		if (validateAdmin(adminSpace, adminEmail))
 			usersStore.clear();
 	}
 
-	// Admin validation function
 	public boolean validateAdmin(String adminSpace, String adminEmail) {
 		String key = adminSpace + delimiter + adminEmail;
 		UserEntity admin = usersStore.get(key);

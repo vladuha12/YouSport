@@ -9,33 +9,32 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import dts.boundaries.OperationBoundary;
-import dts.logic.OperationsService;
+import dts.logic.operation.EnhancedOperationsService;
 
 @RestController
 public class OperationController {
 
-	private OperationsService operationsHandler;
+	private EnhancedOperationsService operationsHandler;
 
 	@Autowired
-	public void setOperationsHandler(OperationsService operationsHandler) {
+	public void setOperationsHandler(EnhancedOperationsService operationsHandler) {
 		this.operationsHandler = operationsHandler;
 	}
 
 	@RequestMapping(path = "/dts/operations", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public OperationBoundary performOperation(@RequestBody OperationBoundary newOperation) {
-		// newOperation.setCreatedTimestamp(new Date());
-		// return newOperation;
 		return (OperationBoundary) operationsHandler.invokeOperation(newOperation);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/operations/{adminSpace}/{adminEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public OperationBoundary[] getAllMessages(@PathVariable("adminSpace") String adminSpace,
-			@PathVariable("adminEmail") String adminEmail) {
+			@PathVariable("adminEmail") String adminEmail) throws Exception {
 		return this.operationsHandler.getAllOperations(adminSpace, adminEmail).toArray(new OperationBoundary[0]);
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE, path = "/dts/operations/{adminSpace}/{adminEmail}")
-	public void clear(@PathVariable("adminSpace") String adminSpace, @PathVariable("adminEmail") String adminEmail) {
+	public void clear(@PathVariable("adminSpace") String adminSpace, @PathVariable("adminEmail") String adminEmail)
+			throws Exception {
 		operationsHandler.deleteAllActions(adminSpace, adminEmail);
 	}
 

@@ -1,25 +1,30 @@
-package dts.logic;
+package dts.logic.operation;
 
-import org.springframework.beans.factory.annotation.Value;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import dts.Application;
 import dts.boundaries.IdBoundary;
-import dts.boundaries.ItemBoundary;
+import dts.boundaries.ItemIdWrapperBoundary;
 import dts.boundaries.OperationBoundary;
-import dts.boundaries.UserBoundary;
 import dts.boundaries.UserIdBoundary;
-import dts.data.ItemEntity;
+import dts.boundaries.UserIdWrapperBoundary;
 import dts.data.OperationEntity;
-import dts.data.UserRole;
 
 @Component
 public class OperationsConverter {
 
-	private String spaceHelper;
+	private ObjectMapper jackson;
 
-	@Value("${spring.application.name:Space should be here}")
-	public void setSpace(String space) {
-		this.spaceHelper = space;
+	@PostConstruct
+	public void init() {
+		this.jackson = new ObjectMapper();
 	}
 
 	public OperationEntity toEntity(OperationBoundary newOperation) {
@@ -33,18 +38,15 @@ public class OperationsConverter {
 		if (newOperation.getType() != null)
 			entity.setType(newOperation.getType());
 
-		// Converter
 		if (newOperation.getItem() != null) {
-			ItemConverter itemConverter = new ItemConverter();
-			ItemEntity itemEntity = itemConverter.toEntity(newOperation.getItem());
-			entity.setItem(itemEntity);
+			entity.setItem(newOperation.getItem().toString());
 		}
 
 		if (newOperation.getInvokedBy() != null)
 			entity.setInvokedBy(newOperation.getInvokedBy().toString());
 
 		entity.setCreatedTimestamp(newOperation.getCreatedTimestamp());
-		entity.setOperationAttributes(newOperation.getOperationAttributes());
+		entity.setOperationAttributes(this.toEntity(newOperation.getOperationAttributes()));
 
 		return entity;
 	}
@@ -60,38 +62,27 @@ public class OperationsConverter {
 		if (entity.getCreatedTimestamp() != null)
 			boundary.setCreatedTimestamp(entity.getCreatedTimestamp());
 
-		if (entity.getInvokedBy() != null)
-			boundary.setInvokedBy(fromStringToUserBoundary(entity.getInvokedBy()));
+		if (entity.getInvokedBy() != null) {
+			boundary.setInvokedBy(new UserIdWrapperBoundary(fromStringToUserIdBoundary(entity.getInvokedBy())));
+		}
 
-		// Converter
 		if (entity.getItem() != null) {
-			ItemConverter itemConverter = new ItemConverter();
-			ItemBoundary itemBoundary = itemConverter.toBoundary(entity.getItem());
-			boundary.setItem(itemBoundary);
+			boundary.setItem(new ItemIdWrapperBoundary(fromStringToIdBoundary(entity.getItem())));
 		}
 
 		if (entity.getType() != null)
 			boundary.setType(entity.getType());
 
 		if (entity.getOperationAttributes() != null)
-			boundary.setOperationAttributes(entity.getOperationAttributes());
+			boundary.setOperationAttributes(this.toBoundaryAsMap(entity.getOperationAttributes()));
 
 		return boundary;
 	}
 
 	private IdBoundary fromStringToIdBoundary(String id) {
 		if (id != null) {
-			String[] args = id.split("@");
+			String[] args = id.split(Application.ID_DELIMITER);
 			return new IdBoundary(args[0], args[1]);
-		} else
-			return null;
-	}
-
-	private UserBoundary fromStringToUserBoundary(String name) {
-		if (name != null) {
-			String[] args = name.split("&");
-			return new UserBoundary(fromStringToUserIdBoundary(args[0]), UserRole.valueOf(args[1]), args[2], args[3],
-					args[4]);
 		} else {
 			return null;
 		}
@@ -99,9 +90,35 @@ public class OperationsConverter {
 
 	private UserIdBoundary fromStringToUserIdBoundary(String id) {
 		if (id != null) {
-			String[] args = id.split("#");
+			String[] args = id.split(Application.ID_DELIMITER);
 			return new UserIdBoundary(args[0], args[1]);
 		} else
 			return null;
+	}
+
+	private String toEntity(Map<String, Object> attributes) {
+		// Object->JSON:
+		if (attributes != null) {
+			try {
+				return this.jackson.writeValueAsString(attributes);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		} else {
+			return "{}";
+		}
+	}
+
+	private Map<String, Object> toBoundaryAsMap(String attributes) {
+		// JSON > Object
+		if (attributes != null) {
+			try {
+				return this.jackson.readValue(attributes, Map.class);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		} else {
+			return new HashMap<>();
+		}
 	}
 }

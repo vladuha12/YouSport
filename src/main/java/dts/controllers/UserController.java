@@ -7,22 +7,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import dts.boundaries.NewUserBoundary;
 import dts.boundaries.UserBoundary;
-import dts.logic.UsersService;
+import dts.logic.user.EnhancedUsersService;
 
 @RestController
 public class UserController {
-	private UsersService userHandler;
+	private EnhancedUsersService userHandler;
 
-	// Initialize UserService handler
 	@Autowired
-	public void setUserHandler(UsersService userHandler) {
+	public void setUserHandler(EnhancedUsersService userHandler) {
 		this.userHandler = userHandler;
 	}
 
 	// Create a new user
 	@RequestMapping(path = "/dts/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary storeNewUser(@RequestBody UserBoundary newUser) {
+	public UserBoundary storeNewUser(@RequestBody NewUserBoundary newUser) throws Exception {
 		return userHandler.createUser(newUser);
 	}
 
