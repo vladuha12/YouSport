@@ -1,22 +1,30 @@
 package dts.data;
 
 import java.util.Date;
-import java.util.Map;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+@Entity
+@Table(name = "OPERATIONS")
 public class OperationEntity {
 
 	private String operationId;
 	private String type;
-	private ItemEntity item;
+	private String item;
 	private Date createdTimestamp;
 	private String invokedBy;
-	private Map<String, Object> operationAttributes;
+	private String operationAttributes;
 
 	public OperationEntity() {
 	}
 
-	public OperationEntity(String operationId, String type, ItemEntity item, Date createdTimestamp, String invokedBy,
-			Map<String, Object> operationAttributes) {
+	public OperationEntity(String operationId, String type, String item, Date createdTimestamp, String invokedBy,
+			String operationAttributes) {
 		super();
 		this.operationId = operationId;
 		this.type = type;
@@ -26,6 +34,7 @@ public class OperationEntity {
 		this.operationAttributes = operationAttributes;
 	}
 
+	@Id
 	public String getOperationId() {
 		return operationId;
 	}
@@ -42,14 +51,15 @@ public class OperationEntity {
 		this.type = type;
 	}
 
-	public ItemEntity getItem() {
+	public String getItem() {
 		return item;
 	}
 
-	public void setItem(ItemEntity item) {
+	public void setItem(String item) {
 		this.item = item;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
@@ -66,12 +76,38 @@ public class OperationEntity {
 		this.invokedBy = invokedBy;
 	}
 
-	public Map<String, Object> getOperationAttributes() {
+	@Lob
+	public String getOperationAttributes() {
 		return operationAttributes;
 	}
 
-	public void setOperationAttributes(Map<String, Object> operationAttributes) {
+	public void setOperationAttributes(String operationAttributes) {
 		this.operationAttributes = operationAttributes;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((operationId == null) ? 0 : operationId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		OperationEntity other = (OperationEntity) obj;
+		if (operationId == null) {
+			if (other.operationId != null)
+				return false;
+		} else if (!operationId.equals(other.operationId))
+			return false;
+		return true;
 	}
 
 }
