@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dts.boundaries.NewUserBoundary;
 import dts.boundaries.UserBoundary;
+import dts.boundaries.UserIdBoundary;
 import dts.logic.user.EnhancedUsersService;
 
 @RestController
@@ -26,7 +27,7 @@ public class UserController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(path = "/dts/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary storeNewUser(@RequestBody NewUserBoundary newUser) throws Exception {
-		return userHandler.createUser(newUser);
+		return userHandler.createUser(new UserBoundary(new UserIdBoundary(null,newUser.getEmail()),newUser.getRole(),newUser.getUsername(), newUser.getAvatar()));
 	}
 
 	// Login valid user and retrieve user details
@@ -34,7 +35,6 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/users/login/{userSpace}/{userEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary loginUser(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail) throws Exception {
-		// stub implementation - in the future we will authenticate the user
 		return userHandler.login(userSpace, userEmail);
 	}
 

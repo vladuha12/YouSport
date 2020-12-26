@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import dts.boundaries.NewUserBoundary;
 import dts.boundaries.UserBoundary;
 import dts.boundaries.UserIdBoundary;
 import dts.data.UserEntity;
@@ -54,20 +53,22 @@ public class RdbUsersService implements EnhancedUsersService {
 
 	@Override
 	@Transactional
-	public UserBoundary createUser(NewUserBoundary newUser) throws Exception {
+	public UserBoundary createUser(UserBoundary newUser) throws Exception {
 		try {
-			if (!isEmailValid(newUser.getEmail())) {
+			if (!isEmailValid(newUser.getUserId().getEmail())) {
 				throw new RuntimeException("Incorrect email");
 			}
-			if (newUser.getAvatar() == "") {
+			if (newUser.getAvatar() == "" || newUser.getAvatar() == null) {
+				throw new RuntimeException("Avatar is empty");
+			}
+			if (newUser.getUsername() == "" || newUser.getUsername() == null) {
 				throw new RuntimeException("Avatar is empty");
 			}
 			if (!userRoleValid(newUser.getRole())) {
 				throw new RuntimeException("Role is not valid");
 			}
-			UserIdBoundary userId = new UserIdBoundary(this.helperName, newUser.getEmail());
-			UserBoundary user = new UserBoundary(userId, newUser.getRole(), newUser.getUsername(), newUser.getAvatar());
-			UserEntity userEntity = this.userConverter.toEntity(user);
+			newUser.setUserId(new UserIdBoundary(helperName,newUser.getUserId().getEmail()));
+			UserEntity userEntity = this.userConverter.toEntity(newUser);
 			return this.userConverter.toBoundary(this.usersDao.save(userEntity));
 		} catch (Exception e) {
 			throw new RuntimeException(e);

@@ -9,9 +9,6 @@ public class NewUserBoundary {
 	private String avatar;
 	
 	public NewUserBoundary() {
-		this.role = UserRole.PLAYER;
-		this.username = "Demo User";
-		this.avatar = "ooOO_()OOoo";
 	}
 
 
