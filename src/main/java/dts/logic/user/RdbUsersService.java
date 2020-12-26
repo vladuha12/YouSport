@@ -1,4 +1,4 @@
-package dts.dal.user;
+package dts.logic.user;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +14,6 @@ import dts.boundaries.UserBoundary;
 import dts.boundaries.UserIdBoundary;
 import dts.data.UserEntity;
 import dts.data.UserRole;
-import dts.logic.user.EnhancedUsersService;
-import dts.logic.user.UserConverter;
 import dts.util.ObjNotFoundException;
 
 @Service

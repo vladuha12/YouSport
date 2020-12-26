@@ -1,4 +1,4 @@
-package dts.dal.item;
+package dts.logic.item;
 
 import org.springframework.data.repository.CrudRepository;
 

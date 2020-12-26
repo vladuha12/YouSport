@@ -1,4 +1,4 @@
-package dts.dal;
+package dts.logic;
 
 import java.util.UUID;
 
