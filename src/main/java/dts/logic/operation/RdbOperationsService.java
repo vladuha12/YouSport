@@ -1,4 +1,4 @@
-package dts.dal.operation;
+package dts.logic.operation;
 
 import java.util.Date;
 import java.util.List;
@@ -11,11 +11,9 @@ import org.springframework.stereotype.Service;
 
 import dts.boundaries.IdBoundary;
 import dts.boundaries.OperationBoundary;
-import dts.dal.IdGeneratorEntityDao;
 import dts.data.IdGeneratorEntity;
 import dts.data.OperationEntity;
-import dts.logic.operation.EnhancedOperationsService;
-import dts.logic.operation.OperationsConverter;
+import dts.logic.IdGeneratorEntityDao;
 
 @Service
 public class RdbOperationsService implements EnhancedOperationsService {
