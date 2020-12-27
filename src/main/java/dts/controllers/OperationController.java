@@ -24,8 +24,8 @@ public class OperationController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(path = "/dts/operations", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public OperationBoundary performOperation(@RequestBody OperationBoundary newOperation) {
-		return (OperationBoundary) operationsHandler.invokeOperation(newOperation);
+	public Object performOperation(@RequestBody OperationBoundary newOperation) throws Exception {
+		return operationsHandler.invokeOperation(newOperation);
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")

@@ -15,10 +15,10 @@ public class OperationBoundary {
 
 	public OperationBoundary() {
 		this.operationId = new IdBoundary();
-		this.type = "operationType";
-		item = new ItemIdWrapperBoundary();
+		// this.type = "operationType";
+		// item = new ItemIdWrapperBoundary();
 		createdTimestamp = new Date();
-		invokedBy = new UserIdWrapperBoundary();
+		// invokedBy = new UserIdWrapperBoundary();
 
 		operationAttributes = new HashMap<>();
 		operationAttributes.put("key1", "Amazing operation");
@@ -36,6 +36,13 @@ public class OperationBoundary {
 	public OperationBoundary(String space, String id) {
 		this();
 		this.operationId = new IdBoundary(space, id);
+	}
+
+	public OperationBoundary(String operationType, ItemIdWrapperBoundary item, UserIdWrapperBoundary invokedBy) {
+		this();
+		this.type = operationType;
+		this.item = item;
+		this.invokedBy = invokedBy;
 	}
 
 	public IdBoundary getOperationId() {
@@ -85,4 +92,12 @@ public class OperationBoundary {
 	public void setOperationAttributes(Map<String, Object> operationAttributes) {
 		this.operationAttributes = operationAttributes;
 	}
+
+	@Override
+	public String toString() {
+		return "OperationBoundary [operationId=" + operationId + ", type=" + type + ", item=" + item
+				+ ", createdTimestamp=" + createdTimestamp + ", invokedBy=" + invokedBy + ", operationAttributes="
+				+ operationAttributes + "]";
+	}
+
 }
