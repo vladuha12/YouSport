@@ -1,8 +1,8 @@
 package dts.logic.user;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import dts.data.UserEntity;
 
-public interface UsersDao extends CrudRepository<UserEntity, String>{
+public interface UsersDao extends PagingAndSortingRepository<UserEntity, String>{
 
 }

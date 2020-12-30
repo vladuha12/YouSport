@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dts.boundaries.OperationBoundary;
@@ -64,10 +65,13 @@ public class AdminController {
 	// Export All Users API
 	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/admin/users/{adminSpace}/{adminEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary[] exportAllUsers(@PathVariable("adminSpace") String adminSpace,
-			@PathVariable("adminEmail") String adminEmail) {
-
-		return userHandler.getAllUsers(adminSpace, adminEmail).toArray(new UserBoundary[0]);
+	public UserBoundary[] exportAllUsers(
+			@PathVariable("adminSpace") String adminSpace,
+			@PathVariable("adminEmail") String adminEmail,
+			@RequestParam(name = "size", required = false, defaultValue = "15") int size,
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page){
+		System.err.println("new");
+		return userHandler.getAllUsers(adminSpace, adminEmail,size,page).toArray(new UserBoundary[0]);
 	}
 
 	// Export All Operations API
