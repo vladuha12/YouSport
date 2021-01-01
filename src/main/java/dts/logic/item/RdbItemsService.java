@@ -1,4 +1,4 @@
-package dts.dal.item;
+package dts.logic.item;
 
 import java.util.Date;
 import java.util.List;
@@ -16,11 +16,10 @@ import dts.Application;
 import dts.boundaries.IdBoundary;
 import dts.boundaries.ItemBoundary;
 import dts.boundaries.ItemIdBoundary;
-import dts.dal.IdGeneratorEntityDao;
+import dts.boundaries.UserIdBoundary;
 import dts.data.IdGeneratorEntity;
 import dts.data.ItemEntity;
-import dts.logic.item.EnhancedItemsService;
-import dts.logic.item.ItemConverter;
+import dts.logic.IdGeneratorEntityDao;
 import dts.util.ObjNotFoundException;
 
 @Service
@@ -59,6 +58,10 @@ public class RdbItemsService implements EnhancedItemsService {
 			entity.setItemId(id.toString());
 			entity.setCreatedTimestamp(new Date());
 
+			UserIdBoundary createdBy = new UserIdBoundary(managerSpace, managerEmail);
+
+			entity.setCreatedBy(createdBy.toString());
+
 			return this.itemConverter.toBoundary(this.itemsDao.save(entity));
 		} catch (Exception e) {
 			throw new RuntimeException();
@@ -81,9 +84,12 @@ public class RdbItemsService implements EnhancedItemsService {
 			if (updateEntity.getType() == null || updateEntity.getType().trim().isEmpty()) {
 				throw new RuntimeException("item type can not be empty");
 			}
+
 			updateEntity.setItemId(existingEntity.getItemId());
 			updateEntity.setCreatedTimestamp(existingEntity.getCreatedTimestamp());
 			updateEntity.setCreatedBy(existingEntity.getCreatedBy());
+			updateEntity.setChildren(existingEntity.getChildren());
+			updateEntity.setParents(existingEntity.getParents());
 
 			return this.itemConverter.toBoundary(this.itemsDao.save(updateEntity));
 		} else {

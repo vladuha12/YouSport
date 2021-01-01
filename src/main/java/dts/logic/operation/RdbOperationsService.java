@@ -1,4 +1,4 @@
-package dts.dal.operation;
+package dts.logic.operation;
 
 import java.util.Date;
 import java.util.List;
@@ -11,11 +11,10 @@ import org.springframework.stereotype.Service;
 
 import dts.boundaries.IdBoundary;
 import dts.boundaries.OperationBoundary;
-import dts.dal.IdGeneratorEntityDao;
 import dts.data.IdGeneratorEntity;
 import dts.data.OperationEntity;
-import dts.logic.operation.EnhancedOperationsService;
-import dts.logic.operation.OperationsConverter;
+import dts.logic.IdGeneratorEntityDao;
+import dts.util.BadRequestException;
 
 @Service
 public class RdbOperationsService implements EnhancedOperationsService {
@@ -34,19 +33,25 @@ public class RdbOperationsService implements EnhancedOperationsService {
 	}
 
 	@Override
-	public Object invokeOperation(OperationBoundary operation) {
-		OperationEntity entity = this.operationConverter.toEntity(operation);
+	public Object invokeOperation(OperationBoundary operation) throws Exception {
 
-		IdGeneratorEntity idGeneratorEntity = new IdGeneratorEntity();
-		idGeneratorEntity = this.IdGeneratorEntityDao.save(idGeneratorEntity);
-		UUID newId = idGeneratorEntity.getId();
-		this.IdGeneratorEntityDao.deleteById(newId);
+		if (isValidInput(operation)) {
+			OperationEntity entity = this.operationConverter.toEntity(operation);
 
-		IdBoundary id = new IdBoundary(newId.toString());
-		entity.setOperationId(id.toString());
-		entity.setCreatedTimestamp(new Date());
+			IdGeneratorEntity idGeneratorEntity = new IdGeneratorEntity();
+			idGeneratorEntity = this.IdGeneratorEntityDao.save(idGeneratorEntity);
+			UUID newId = idGeneratorEntity.getId();
+			this.IdGeneratorEntityDao.deleteById(newId);
 
-		return this.operationConverter.toBoundary(this.operationsDao.save(entity));
+			IdBoundary id = new IdBoundary(newId.toString());
+			entity.setOperationId(id.toString());
+			entity.setCreatedTimestamp(new Date());
+
+			return this.operationConverter.toBoundary(this.operationsDao.save(entity));
+		} else {
+			throw new BadRequestException("Cant proccess request due to invalid request message framing");
+		}
+
 	}
 
 	@Override
@@ -67,6 +72,16 @@ public class RdbOperationsService implements EnhancedOperationsService {
 		else
 			throw new Exception("Bad Credentials");
 
+	}
+
+	private boolean isValidInput(OperationBoundary boundary) {
+		boolean valid = true;
+
+		if (boundary.getType() == null || boundary.getType().isEmpty() || boundary.getInvokedBy() == null
+				|| boundary.getItem() == null)
+			valid = false;
+
+		return valid;
 	}
 
 }

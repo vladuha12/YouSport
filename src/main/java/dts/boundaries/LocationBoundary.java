@@ -2,17 +2,15 @@ package dts.boundaries;
 
 public class LocationBoundary {
 	private String lat;
-	private String lag;
+	private String lng;
 
 	public LocationBoundary() {
-		this.lat = "32.115139";
-		this.lag = "34.817804";
 	}
 
-	public LocationBoundary(String lat, String lag) {
+	public LocationBoundary(String lat, String lng) {
 		super();
 		this.lat = lat;
-		this.lag = lag;
+		this.lng = lng;
 	}
 
 	public String getLat() {
@@ -23,16 +21,16 @@ public class LocationBoundary {
 		this.lat = lat;
 	}
 
-	public String getLag() {
-		return lag;
+	public String getLng() {
+		return lng;
 	}
 
-	public void setLag(String lag) {
-		this.lag = lag;
+	public void setLng(String lng) {
+		this.lng = lng;
 	}
-	
+
 	@Override
 	public String toString() {
-		return this.lat + "@" + this.lag;
+		return this.lat + "@" + this.lng;
 	}
 }

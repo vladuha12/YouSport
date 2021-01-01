@@ -1,4 +1,4 @@
-package dts.dal.user;
+package dts.logic.user;
 
 import org.springframework.data.repository.CrudRepository;
 import dts.data.UserEntity;

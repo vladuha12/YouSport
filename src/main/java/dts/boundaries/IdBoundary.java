@@ -15,7 +15,7 @@ public class IdBoundary {
 
 	public IdBoundary(String space, String id) {
 		super();
-		this.space = Application.APPLICATION_NAME;
+		this.space = space;
 		this.id = id;
 	}
 

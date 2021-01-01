@@ -13,7 +13,7 @@ public class UserIdBoundary {
 
 	public UserIdBoundary(String space, String email) {
 		super();
-		this.space = Application.APPLICATION_NAME;
+		this.space = space;
 		this.email = email;
 	}
 

@@ -1,4 +1,4 @@
-package dts.dal.operation;
+package dts.logic.operation;
 
 import org.springframework.data.repository.CrudRepository;
 
