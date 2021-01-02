@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import dts.boundaries.UserBoundary;
@@ -120,6 +122,24 @@ public class RdbUsersService implements EnhancedUsersService {
 					.map(entity -> this.userConverter.toBoundary(entity)).collect(Collectors.toList());
 		else
 			return null;
+	}
+	
+	//With pagination and sort
+	@Override
+	@Transactional(readOnly = true)
+	public List<UserBoundary> getAllUsers(String adminSpace, String adminEmail, int size, int page) {
+		if (validateAdmin(adminSpace, adminEmail)) {
+			return this.usersDao.findAll(
+				PageRequest.of(page, size, Direction.DESC, "username"))
+				.getContent()
+				.stream()
+				.map(this.userConverter::toBoundary)
+				.collect(Collectors.toList());
+		}
+		else
+			return null;
+		
+		
 	}
 
 	@Override
