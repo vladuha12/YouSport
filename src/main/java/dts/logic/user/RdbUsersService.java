@@ -5,17 +5,20 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import dts.boundaries.UserBoundary;
 import dts.boundaries.UserIdBoundary;
 import dts.data.UserEntity;
 import dts.data.UserRole;
 import dts.util.ObjNotFoundException;
+import dts.util.RoleValidator;
 
 @Service
 public class RdbUsersService implements EnhancedUsersService {
@@ -117,7 +120,7 @@ public class RdbUsersService implements EnhancedUsersService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<UserBoundary> getAllUsers(String adminSpace, String adminEmail) {
-		if (validateAdmin(adminSpace, adminEmail))
+		if (RoleValidator.canUserPerformOperation(new UserIdBoundary(adminSpace, adminEmail), UserRole.ADMIN, usersDao))
 			return StreamSupport.stream(this.usersDao.findAll().spliterator(), false)
 					.map(entity -> this.userConverter.toBoundary(entity)).collect(Collectors.toList());
 		else
@@ -128,7 +131,8 @@ public class RdbUsersService implements EnhancedUsersService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<UserBoundary> getAllUsers(String adminSpace, String adminEmail, int size, int page) {
-		if (validateAdmin(adminSpace, adminEmail)) {
+		if (RoleValidator.canUserPerformOperation(new UserIdBoundary(adminSpace, adminEmail), UserRole.ADMIN,
+				usersDao)) {
 			return this.usersDao.findAll(
 				PageRequest.of(page, size, Direction.DESC, "username"))
 				.getContent()
@@ -138,25 +142,23 @@ public class RdbUsersService implements EnhancedUsersService {
 		}
 		else
 			return null;
-		
-		
+
 	}
 
 	@Override
 	@Transactional
 	public void deleteAllUsers(String adminSpace, String adminEmail) {
-		if (validateAdmin(adminSpace, adminEmail))
+		if (RoleValidator.canUserPerformOperation(new UserIdBoundary(adminSpace, adminEmail), UserRole.ADMIN, usersDao))
 			this.usersDao.deleteAll();
 	}
 
-	public boolean validateAdmin(String adminSpace, String adminEmail) {
-
-		UserIdBoundary userIdBoundary = new UserIdBoundary(adminSpace, adminEmail);
-		String id = userIdBoundary.toString();
-		Optional<UserEntity> exiting = this.usersDao.findById(id);
-		if (exiting.isPresent() && exiting.get().getRole() == UserRole.ADMIN) {
-			return true;
-		} else
-			return false;
-	}
+	/*
+	 * public boolean validateAdmin(String adminSpace, String adminEmail) {
+	 * 
+	 * UserIdBoundary userIdBoundary = new UserIdBoundary(adminSpace, adminEmail);
+	 * String id = userIdBoundary.toString(); Optional<UserEntity> exiting =
+	 * this.usersDao.findById(id); if (exiting.isPresent() &&
+	 * exiting.get().getRole() == UserRole.ADMIN) { return true; } else return
+	 * false; }
+	 */
 }

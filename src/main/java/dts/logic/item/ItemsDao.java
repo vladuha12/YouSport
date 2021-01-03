@@ -25,6 +25,5 @@ public interface ItemsDao extends PagingAndSortingRepository<ItemEntity, String>
 			@Param("maxLat") float maxLat, @Param("minLng") float minLng, @Param("maxLng") float maxLng,
 			Pageable pageable);
 
-	public ItemEntity findByActiveAndItemId(@Param("active") boolean active, @Param("itemId") String pattern,
-			Pageable pageable);
+	public ItemEntity findByActiveAndItemId(@Param("active") boolean active, @Param("itemId") String itemId);
 }
