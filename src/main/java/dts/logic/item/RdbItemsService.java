@@ -3,12 +3,12 @@ package dts.logic.item;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -98,10 +98,14 @@ public class RdbItemsService implements EnhancedItemsService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	// @Transactional(readOnly = true)
 	public List<ItemBoundary> getAll(String userSpace, String userEmail) {
-		return StreamSupport.stream(this.itemsDao.findAll().spliterator(), false)
-				.map(entity -> this.itemConverter.toBoundary(entity)).collect(Collectors.toList());
+		throw new RuntimeException("deprecated");
+		/*
+		 * return StreamSupport.stream(this.itemsDao.findAll().spliterator(), false)
+		 * .map(entity ->
+		 * this.itemConverter.toBoundary(entity)).collect(Collectors.toList());
+		 */
 	}
 
 	@Override
@@ -146,33 +150,120 @@ public class RdbItemsService implements EnhancedItemsService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	// @Transactional(readOnly = true)
 	public List<ItemBoundary> getChildren(String userSpace, String userEmail, String itemSpace, String itemId) {
-		Optional<ItemEntity> parent = this.itemsDao.findById(itemSpace + Application.ID_DELIMITER + itemId);
-		if (parent.isPresent()) {
-			ItemEntity parentEntity = parent.get();
-			Set<ItemEntity> cildren = parentEntity.getChildren();
-			return StreamSupport.stream(cildren.spliterator(), false)
-					.map(entity -> this.itemConverter.toBoundary(entity)).collect(Collectors.toList());
+		throw new RuntimeException("deprecated");
+		/*
+		 * Optional<ItemEntity> parent = this.itemsDao.findById(itemSpace +
+		 * Application.ID_DELIMITER + itemId); if (parent.isPresent()) { ItemEntity
+		 * parentEntity = parent.get(); Set<ItemEntity> cildren =
+		 * parentEntity.getChildren(); return
+		 * StreamSupport.stream(cildren.spliterator(), false) .map(entity ->
+		 * this.itemConverter.toBoundary(entity)).collect(Collectors.toList());
+		 * 
+		 * } else { throw new ObjNotFoundException("parent item with id: " + itemId +
+		 * " could not be found"); }
+		 */
+	}
 
-		} else {
-			throw new ObjNotFoundException("parent item with id: " + itemId + " could not be found");
+	@Override
+	// @Transactional(readOnly = true)
+	public List<ItemBoundary> getParents(String userSpace, String userEmail, String itemSpace, String itemId) {
+		throw new RuntimeException("deprecated");
+		/*
+		 * Optional<ItemEntity> child = this.itemsDao.findById(itemSpace +
+		 * Application.ID_DELIMITER + itemId); if (child.isPresent()) { ItemEntity
+		 * childEntity = child.get(); Set<ItemEntity> parents =
+		 * childEntity.getParents(); return StreamSupport.stream(parents.spliterator(),
+		 * false) .map(entity ->
+		 * this.itemConverter.toBoundary(entity)).collect(Collectors.toList());
+		 * 
+		 * } else { throw new ObjNotFoundException("child item with id: " + itemId +
+		 * " could not be found"); }
+		 */
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<ItemBoundary> getAll(String userSpace, String userEmail, int size, int page) {
+		return this.itemsDao.findAll(PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemId"))
+				.getContent().stream().map(this.itemConverter::toBoundary).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<ItemBoundary> getChildren(String userSpace, String userEmail, String itemSpace, String itemId, int size,
+			int page) {
+
+		List<ItemEntity> children = this.itemsDao.findAllByParents_itemId(
+				(itemSpace + Application.ID_DELIMITER + itemId),
+				PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemId"));
+
+		return children.stream().map(this.itemConverter::toBoundary).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<ItemBoundary> getParents(String userSpace, String userEmail, String itemSpace, String itemId, int size,
+			int page) {
+		List<ItemEntity> parents = this.itemsDao.findAllByChildren_itemId(
+				(itemSpace + Application.ID_DELIMITER + itemId),
+				PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemId"));
+
+		return parents.stream().map(this.itemConverter::toBoundary).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<ItemBoundary> getAllItemsByNamePattern(String userSpace, String userEmail, String namePattern, int size,
+			int page) {
+
+		if (namePattern == null || namePattern.length() > 1) {
+			// this.log.error("**** Error - input letter must contain a single character:
+			// \'" + letter + "\'");
+			// throw new SearchByLetterException("input letter must contain a single
+			// character: " + letter);
+		}
+
+		try {
+			return this.itemsDao
+					.findAllByNameLike("%" + namePattern + "%",
+							PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemId"))
+					.stream().map(this.itemConverter::toBoundary).collect(Collectors.toList());
+		} finally {
+			// this.log.debug("**** done finding important messages starting with \'" +
+			// letter + "\'");
 		}
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<ItemBoundary> getParents(String userSpace, String userEmail, String itemSpace, String itemId) {
-		Optional<ItemEntity> child = this.itemsDao.findById(itemSpace + Application.ID_DELIMITER + itemId);
-		if (child.isPresent()) {
-			ItemEntity childEntity = child.get();
-			Set<ItemEntity> parents = childEntity.getParents();
-			return StreamSupport.stream(parents.spliterator(), false)
-					.map(entity -> this.itemConverter.toBoundary(entity)).collect(Collectors.toList());
-
-		} else {
-			throw new ObjNotFoundException("child item with id: " + itemId + " could not be found");
+	public List<ItemBoundary> getAllItemsByType(String userSpace, String userEmail, String type, int size, int page) {
+		if (type == null || type.length() > 1) {
+			// this.log.error("**** Error - input letter must contain a single character:
+			// \'" + letter + "\'");
+			// throw new SearchByLetterException("input letter must contain a single
+			// character: " + letter);
 		}
+
+		try {
+			return this.itemsDao
+					.findAllByType(type, PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemId"))
+					.stream().map(this.itemConverter::toBoundary).collect(Collectors.toList());
+		} finally {
+			// this.log.debug("**** done finding important messages starting with \'" +
+			// letter + "\'");
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<ItemBoundary> getAllItemsWithinRange(String userSpace, String userEmail, float lat, float lng,
+			float distance, int size, int page) {
+		return this.itemsDao
+				.findAllByLatBetweenAndLngBetween(lat - distance, lat + distance, lng - distance, lng + distance,
+						PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemId"))
+				.stream().map(this.itemConverter::toBoundary).collect(Collectors.toList());
 	}
 
 }
