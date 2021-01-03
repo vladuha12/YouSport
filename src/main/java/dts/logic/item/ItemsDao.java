@@ -24,4 +24,7 @@ public interface ItemsDao extends PagingAndSortingRepository<ItemEntity, String>
 	public List<ItemEntity> findAllByLatBetweenAndLngBetween(@Param("minLat") float minLat,
 			@Param("maxLat") float maxLat, @Param("minLng") float minLng, @Param("maxLng") float maxLng,
 			Pageable pageable);
+
+	public ItemEntity findByActiveAndItemId(@Param("active") boolean active, @Param("itemId") String pattern,
+			Pageable pageable);
 }
