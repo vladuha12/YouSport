@@ -14,12 +14,15 @@ import org.springframework.stereotype.Service;
 import dts.boundaries.IdBoundary;
 import dts.boundaries.OperationBoundary;
 import dts.data.IdGeneratorEntity;
+import dts.data.ItemEntity;
 import dts.data.OperationEntity;
 import dts.data.UserRole;
 import dts.logic.IdGeneratorEntityDao;
+import dts.logic.item.ItemsDao;
 import dts.logic.user.UsersDao;
 import dts.util.BadRequestException;
 import dts.util.ForbiddenException;
+import dts.util.ObjNotFoundException;
 import dts.util.RoleValidator;
 
 @Service
@@ -30,15 +33,17 @@ public class RdbOperationsService implements EnhancedOperationsService {
 	private IdGeneratorEntityDao IdGeneratorEntityDao;
 
 	private UsersDao usersDao;
+	private ItemsDao itemsDao;
 
 	@Autowired
 	public RdbOperationsService(OperationsDao operationsDao, OperationsConverter operationConverter,
-			IdGeneratorEntityDao IdGeneratorEntityDao, UsersDao usersDao) {
+			IdGeneratorEntityDao IdGeneratorEntityDao, UsersDao usersDao, ItemsDao itemsDao) {
 		super();
 		this.operationsDao = operationsDao;
 		this.operationConverter = operationConverter;
 		this.IdGeneratorEntityDao = IdGeneratorEntityDao;
 		this.usersDao = usersDao;
+		this.itemsDao = itemsDao;
 	}
 
 	@Override
@@ -53,9 +58,14 @@ public class RdbOperationsService implements EnhancedOperationsService {
 				throw new ForbiddenException("invokeOperation - Can only be performed by a Player");
 			}
 
-			// TODO Ensure the item exists and is active in db else - throw objnotfound
+			// Ensure the item exists and is active in db else - throw ObjNotFound
+			ItemEntity targetItem = itemsDao.findByActiveAndItemId(true, operation.getItem().toString());
+			if (targetItem == null) {
+				throw new ObjNotFoundException("No such item");
+			}
 
 			// TODO Act according to operation type
+			// TODO MAGIC
 
 			OperationEntity entity = this.operationConverter.toEntity(operation);
 

@@ -2,6 +2,7 @@ package dts.util;
 
 import java.util.Optional;
 
+import dts.boundaries.UserIdBoundary;
 import dts.boundaries.UserIdWrapperBoundary;
 import dts.data.UserEntity;
 import dts.data.UserRole;
@@ -18,5 +19,10 @@ public abstract class RoleValidator {
 				return true;
 		}
 		return false;
+	}
+
+	public static boolean canUserPerformOperation(UserIdBoundary userIdBoundary, UserRole requiredRole,
+			UsersDao usersDao) {
+		return canUserPerformOperation(new UserIdWrapperBoundary(userIdBoundary), requiredRole, usersDao);
 	}
 }
