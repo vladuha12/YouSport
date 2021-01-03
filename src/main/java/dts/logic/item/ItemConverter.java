@@ -40,9 +40,9 @@ public class ItemConverter {
 					new UserIdWrapperBoundary(fromStringToUserIdBoundary(entity.getCreatedBy().toString())));
 		}
 
-		if (entity.getLat() != null && entity.getLng() != null) {
-			boundary.setLocation(new LocationBoundary(entity.getLat(), entity.getLng()));
-		}
+		// if (entity.getLat() != null && entity.getLng() != null) {
+		boundary.setLocation(new LocationBoundary(entity.getLat(), entity.getLng()));
+		// }
 
 		if (entity.getCreatedTimestamp() != null) {
 			boundary.setCreatedTimestamp(entity.getCreatedTimestamp());

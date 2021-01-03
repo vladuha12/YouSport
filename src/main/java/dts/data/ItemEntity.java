@@ -22,8 +22,8 @@ public class ItemEntity {
 	private Date createdTimestamp;
 	private Boolean active;
 	private String createdBy;
-	private String lat;
-	private String lng;
+	private float lat;
+	private float lng;
 	private String itemAttributes;
 	private Set<ItemEntity> children;
 	private Set<ItemEntity> parents;
@@ -32,7 +32,7 @@ public class ItemEntity {
 	}
 
 	public ItemEntity(String itemId, String name, String type, Date createdTimestamp, Boolean active, String createdBy,
-			String lat, String lng, String itemAttributes) {
+			float lat, float lng, String itemAttributes) {
 		super();
 		this.itemId = itemId;
 		this.name = name;
@@ -95,19 +95,19 @@ public class ItemEntity {
 		this.createdBy = createdBy;
 	}
 
-	public String getLat() {
+	public float getLat() {
 		return lat;
 	}
 
-	public void setLat(String lat) {
+	public void setLat(float lat) {
 		this.lat = lat;
 	}
 
-	public String getLng() {
+	public float getLng() {
 		return lng;
 	}
 
-	public void setLng(String lng) {
+	public void setLng(float lng) {
 		this.lng = lng;
 	}
 
