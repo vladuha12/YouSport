@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
@@ -20,10 +22,12 @@ import dts.boundaries.UserIdBoundary;
 import dts.data.IdGeneratorEntity;
 import dts.data.ItemEntity;
 import dts.logic.IdGeneratorEntityDao;
+import dts.util.BadInputException;
 import dts.util.ObjNotFoundException;
 
 @Service
 public class RdbItemsService implements EnhancedItemsService {
+	private Log log = LogFactory.getLog(RdbItemsService.class);
 	private ItemsDao itemsDao;
 	private ItemConverter itemConverter;
 	private IdGeneratorEntityDao IdGeneratorEntityDao;
@@ -218,11 +222,9 @@ public class RdbItemsService implements EnhancedItemsService {
 	public List<ItemBoundary> getAllItemsByNamePattern(String userSpace, String userEmail, String namePattern, int size,
 			int page) {
 
-		if (namePattern == null || namePattern.length() > 1) {
-			// this.log.error("**** Error - input letter must contain a single character:
-			// \'" + letter + "\'");
-			// throw new SearchByLetterException("input letter must contain a single
-			// character: " + letter);
+		if (namePattern == null || namePattern.isEmpty()) {
+			this.log.error("**** Error - input pattern must contain at least a single character");
+			throw new BadInputException("input pattern must contain at least a single character");
 		}
 
 		try {
@@ -231,19 +233,16 @@ public class RdbItemsService implements EnhancedItemsService {
 							PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemId"))
 					.stream().map(this.itemConverter::toBoundary).collect(Collectors.toList());
 		} finally {
-			// this.log.debug("**** done finding important messages starting with \'" +
-			// letter + "\'");
+			this.log.debug("**** done finding items with names containing \'" + namePattern + "\'");
 		}
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<ItemBoundary> getAllItemsByType(String userSpace, String userEmail, String type, int size, int page) {
-		if (type == null || type.length() > 1) {
-			// this.log.error("**** Error - input letter must contain a single character:
-			// \'" + letter + "\'");
-			// throw new SearchByLetterException("input letter must contain a single
-			// character: " + letter);
+		if (type == null || type.isEmpty()) {
+			this.log.error("**** Error - input type must contain at least a single character");
+			throw new BadInputException("input type must contain at least a single character");
 		}
 
 		try {
@@ -251,8 +250,7 @@ public class RdbItemsService implements EnhancedItemsService {
 					.findAllByType(type, PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemId"))
 					.stream().map(this.itemConverter::toBoundary).collect(Collectors.toList());
 		} finally {
-			// this.log.debug("**** done finding important messages starting with \'" +
-			// letter + "\'");
+			this.log.debug("**** done finding items with type \'" + type + "\'");
 		}
 	}
 
