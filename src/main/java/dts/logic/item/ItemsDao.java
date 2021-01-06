@@ -12,6 +12,10 @@ public interface ItemsDao extends PagingAndSortingRepository<ItemEntity, String>
 
 	public List<ItemEntity> findAllByParents_itemId(@Param("parentsId") String parentsId, Pageable pageable);
 
+	public List<ItemEntity> findAllByActiveAndTypeAndNameAndParents_itemId(@Param("active") boolean active,
+			@Param("type") String type, @Param("name") String name, @Param("parentsId") String parentsId,
+			Pageable pageable);
+
 	public List<ItemEntity> findAllByChildren_itemId(@Param("childrenId") String childrenId, Pageable pageable);
 
 	public List<ItemEntity> findAllByNameLike(@Param("pattern") String pattern, Pageable pageable);
@@ -24,6 +28,10 @@ public interface ItemsDao extends PagingAndSortingRepository<ItemEntity, String>
 	public List<ItemEntity> findAllByLatBetweenAndLngBetween(@Param("minLat") float minLat,
 			@Param("maxLat") float maxLat, @Param("minLng") float minLng, @Param("maxLng") float maxLng,
 			Pageable pageable);
+
+	public List<ItemEntity> findAllByActiveAndTypeAndLatBetweenAndLngBetween(@Param("active") boolean active,
+			@Param("type") String type, @Param("minLat") float minLat, @Param("maxLat") float maxLat,
+			@Param("minLng") float minLng, @Param("maxLng") float maxLng, Pageable pageable);
 
 	public ItemEntity findByActiveAndItemId(@Param("active") boolean active, @Param("itemId") String itemId);
 }

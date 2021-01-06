@@ -21,8 +21,8 @@ public class ItemBoundary {
 		this.createdTimestamp = new Date();
 		this.location = new LocationBoundary();
 		this.itemAttributes = new HashMap<>();
-		this.itemAttributes.put("key1", "key 1 test");
-		this.itemAttributes.put("key2", 123456);
+		// this.itemAttributes.put("key1", "key 1 test");
+		// this.itemAttributes.put("key2", 123456);
 
 	}
 

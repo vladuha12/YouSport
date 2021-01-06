@@ -6,7 +6,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import dts.data.OperationEntity;
 import dts.data.UserRole;
 import dts.logic.IdGeneratorEntityDao;
 import dts.logic.item.ItemsDao;
+import dts.logic.operation.operationHelpers.OperationHelper;
 import dts.logic.user.UsersDao;
 import dts.util.BadRequestException;
 import dts.util.ForbiddenException;
@@ -32,8 +35,15 @@ public class RdbOperationsService implements EnhancedOperationsService {
 	private OperationsConverter operationConverter;
 	private IdGeneratorEntityDao IdGeneratorEntityDao;
 
+	private ConfigurableApplicationContext appContext;
+
 	private UsersDao usersDao;
 	private ItemsDao itemsDao;
+
+	@Autowired
+	public void setAppContext(ConfigurableApplicationContext appContext) {
+		this.appContext = appContext;
+	}
 
 	@Autowired
 	public RdbOperationsService(OperationsDao operationsDao, OperationsConverter operationConverter,
@@ -50,7 +60,7 @@ public class RdbOperationsService implements EnhancedOperationsService {
 	public Object invokeOperation(OperationBoundary operation) throws Exception {
 
 		if (isValidInput(operation)) {
-
+			String type = operation.getType();
 			// Check invokedBy permissions - Only a "PLAYER" can perform an operation
 			// If the initiator is not a "PLAYER" - throw code 403 - Forbidden
 			if (!RoleValidator.canUserPerformOperation(operation.getInvokedBy(), UserRole.PLAYER, usersDao)) {
@@ -59,13 +69,23 @@ public class RdbOperationsService implements EnhancedOperationsService {
 			}
 
 			// Ensure the item exists and is active in db else - throw ObjNotFound
-			ItemEntity targetItem = itemsDao.findByActiveAndItemId(true, operation.getItem().toString());
-			if (targetItem == null) {
-				throw new ObjNotFoundException("No such item");
+			if (!type.equals("getAllFieldsBySportAndDistance")) {
+				ItemEntity targetItem = itemsDao.findByActiveAndItemId(true, operation.getItem().toString());
+				if (targetItem == null) {
+					throw new ObjNotFoundException("No such item");
+				}
 			}
 
-			// TODO Act according to operation type
-			// TODO MAGIC
+			// Act according to operation type (getAllFieldsBySportAndDistance,
+			// updateFieldData, bindSportToField)
+			Object rv;
+			OperationHelper helper = null;
+			try {
+				helper = this.appContext.getBean(type, OperationHelper.class);
+				rv = helper.invokeOperation(operation);
+			} catch (BeansException e) {
+				throw new RuntimeException("invalid operation type");
+			}
 
 			OperationEntity entity = this.operationConverter.toEntity(operation);
 
@@ -78,7 +98,8 @@ public class RdbOperationsService implements EnhancedOperationsService {
 			entity.setOperationId(id.toString());
 			entity.setCreatedTimestamp(new Date());
 
-			return this.operationConverter.toBoundary(this.operationsDao.save(entity));
+			return rv;
+			// return this.operationConverter.toBoundary(this.operationsDao.save(entity));
 		} else {
 			throw new BadRequestException("Cant proccess request due to invalid request message framing");
 		}
@@ -135,6 +156,5 @@ public class RdbOperationsService implements EnhancedOperationsService {
 	 * 
 	 * return false; }
 	 */
-
 
 }

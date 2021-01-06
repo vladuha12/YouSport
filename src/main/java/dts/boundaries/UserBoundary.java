@@ -7,15 +7,14 @@ public class UserBoundary {
 	private UserRole role;
 	private String username;
 	private String avatar;
-	
+
 	public UserBoundary() {
-		this.userId =  new UserIdBoundary();
+		this.userId = new UserIdBoundary();
 		this.role = UserRole.PLAYER;
-		this.username = "Demo User";
-		this.avatar = "ooOO_()OOoo";
+		// this.username = "Demo User";
+		// this.avatar = "ooOO_()OOoo";
 	}
-	
-	
+
 	public UserBoundary(UserIdBoundary userId, UserRole role, String username, String avatar) {
 		super();
 		this.userId = userId;
@@ -23,7 +22,6 @@ public class UserBoundary {
 		this.username = username;
 		this.avatar = avatar;
 	}
-
 
 	public UserIdBoundary getUserId() {
 		return userId;
@@ -58,7 +56,7 @@ public class UserBoundary {
 	}
 
 	public void setSpace(String space) {
-		this.userId.setSpace(space);		
+		this.userId.setSpace(space);
 	}
 
 	public void setEmail(String email) {
