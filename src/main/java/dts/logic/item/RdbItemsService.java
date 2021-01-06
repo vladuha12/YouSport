@@ -22,6 +22,7 @@ import dts.boundaries.UserIdBoundary;
 import dts.data.IdGeneratorEntity;
 import dts.data.ItemEntity;
 import dts.logic.IdGeneratorEntityDao;
+import dts.logic.user.UsersDao;
 import dts.util.BadInputException;
 import dts.util.ObjNotFoundException;
 
@@ -31,19 +32,29 @@ public class RdbItemsService implements EnhancedItemsService {
 	private ItemsDao itemsDao;
 	private ItemConverter itemConverter;
 	private IdGeneratorEntityDao IdGeneratorEntityDao;
+	private UsersDao usersDao;
 
 	@Autowired
-	public RdbItemsService(ItemsDao itemsDao, ItemConverter itemConverter, IdGeneratorEntityDao IdGeneratorEntityDao) {
+	public RdbItemsService(ItemsDao itemsDao, ItemConverter itemConverter, IdGeneratorEntityDao IdGeneratorEntityDao,
+			UsersDao usersDao) {
 		super();
 		this.itemsDao = itemsDao;
 		this.itemConverter = itemConverter;
 		this.IdGeneratorEntityDao = IdGeneratorEntityDao;
+		this.usersDao = usersDao;
 	}
 
 	@Override
 	@Transactional
 	public ItemBoundary create(String managerSpace, String managerEmail, ItemBoundary newItem) throws Exception {
 		try {
+			UserIdBoundary createdBy = new UserIdBoundary(managerSpace, managerEmail);
+			// if (!RoleValidator.canUserPerformOperation(createdBy, UserRole.MANAGER,
+			// usersDao)) {
+			// throw new ForbiddenException("create item - Can only be performed by a
+			// MANAGER");
+			// }
+
 			ItemEntity entity = this.itemConverter.toEntity(newItem);
 			if (entity.getName() == null || entity.getName().trim().isEmpty()) {
 				throw new RuntimeException("item name can not be empty");
@@ -62,8 +73,6 @@ public class RdbItemsService implements EnhancedItemsService {
 			entity.setItemId(id.toString());
 			entity.setCreatedTimestamp(new Date());
 
-			UserIdBoundary createdBy = new UserIdBoundary(managerSpace, managerEmail);
-
 			entity.setCreatedBy(createdBy.toString());
 
 			return this.itemConverter.toBoundary(this.itemsDao.save(entity));
@@ -76,6 +85,14 @@ public class RdbItemsService implements EnhancedItemsService {
 	@Transactional
 	public ItemBoundary update(String managerSpace, String managerEmail, String itemSpace, String itemId,
 			ItemBoundary update) throws Exception {
+
+		// if (!RoleValidator.canUserPerformOperation(new UserIdBoundary(managerSpace,
+		// managerEmail), UserRole.MANAGER,
+		// usersDao)) {
+		// throw new ForbiddenException("update item - Can only be performed by a
+		// MANAGER");
+		// }
+
 		Optional<ItemEntity> exiting = this.itemsDao.findById(itemSpace + Application.ID_DELIMITER + itemId);
 
 		if (exiting.isPresent()) {
@@ -116,7 +133,18 @@ public class RdbItemsService implements EnhancedItemsService {
 	@Transactional(readOnly = true)
 	public ItemBoundary getSpecificItem(String userSpace, String userEmail, String itemSpace, String itemId)
 			throws Exception {
-		Optional<ItemEntity> exiting = this.itemsDao.findById(itemSpace + Application.ID_DELIMITER + itemId);
+
+		Optional<ItemEntity> exiting;
+
+		// if (RoleValidator.canUserPerformOperation(new UserIdBoundary(userSpace,
+		// userEmail), UserRole.PLAYER,
+		// usersDao)) {
+		// exiting = Optional.ofNullable(
+		// this.itemsDao.findByActiveAndItemId(true, itemSpace +
+		// Application.ID_DELIMITER + itemId));
+		// } else {
+		exiting = this.itemsDao.findById(itemSpace + Application.ID_DELIMITER + itemId);
+		// }
 
 		if (exiting.isPresent()) {
 			return this.itemConverter.toBoundary(exiting.get());
@@ -128,10 +156,16 @@ public class RdbItemsService implements EnhancedItemsService {
 	@Override
 	@Transactional
 	public void deleteAll(String adminSpace, String adminEmail) {
+		// if (!RoleValidator.canUserPerformOperation(new UserIdBoundary(adminSpace,
+		// adminEmail), UserRole.ADMIN,
+		// usersDao)) {
+		// throw new ForbiddenException("delete items - Can only be performed by a
+		// ADMIN");
+		// }
 		this.itemsDao.deleteAll();
-
 	}
 
+	// TODO: add validation!!
 	@Override
 	@Transactional
 	public void bind(String managerSpace, String managerEmail, String itemSpace, String itemId, ItemIdBoundary child) {
