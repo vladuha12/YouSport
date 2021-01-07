@@ -21,10 +21,12 @@ public class OperationBoundary {
 		// invokedBy = new UserIdWrapperBoundary();
 
 		operationAttributes = new HashMap<>();
-		operationAttributes.put("key1", "Amazing operation");
-		operationAttributes.put("key2", true);
-		operationAttributes.put("key3", 88.88);
-		operationAttributes.put("key4", new NameBoundary("First", "Last"));
+		// operationAttributes.put("key1",
+		/*
+		 * "Amazing operation"); operationAttributes.put("key2", true);
+		 * operationAttributes.put("key3", 88.88); operationAttributes.put("key4", new
+		 * NameBoundary("First", "Last"));
+		 */
 
 	}
 
@@ -38,13 +40,21 @@ public class OperationBoundary {
 		this.operationId = new IdBoundary(space, id);
 	}
 
-	public OperationBoundary(String operationType, ItemIdWrapperBoundary item, UserIdWrapperBoundary invokedBy) {
-		this();
-		this.type = operationType;
-		this.item = item;
-		this.invokedBy = invokedBy;
-	}
-
+	/*
+	 * public OperationBoundary(String operationType, ItemIdWrapperBoundary item,
+	 * UserIdWrapperBoundary invokedBy) { this(); this.type = operationType;
+	 * this.item = item; this.invokedBy = invokedBy; }
+	 * 
+	 * public OperationBoundary(String operationType, ItemIdWrapperBoundary item,
+	 * UserIdWrapperBoundary invokedBy, Map<String, Object> operationAttributes) {
+	 * this(); this.type = operationType; this.item = item; this.invokedBy =
+	 * invokedBy; this.operationAttributes = operationAttributes; }
+	 * 
+	 * public OperationBoundary(String operationType, UserIdWrapperBoundary
+	 * invokedBy, Map<String, Object> operationAttributes) { this(); this.type =
+	 * operationType; this.invokedBy = invokedBy; this.operationAttributes =
+	 * operationAttributes; }
+	 */
 	public IdBoundary getOperationId() {
 		return operationId;
 	}
