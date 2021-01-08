@@ -8,18 +8,18 @@ import javax.persistence.Id;
 
 @Entity
 public class IdGeneratorEntity {
-	private UUID id;
+	private Long id;
 
 	public IdGeneratorEntity() {
 	}
 
 	@Id
 	@GeneratedValue
-	public UUID getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 }
