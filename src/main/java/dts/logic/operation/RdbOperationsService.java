@@ -91,7 +91,7 @@ public class RdbOperationsService implements EnhancedOperationsService {
 
 			IdGeneratorEntity idGeneratorEntity = new IdGeneratorEntity();
 			idGeneratorEntity = this.IdGeneratorEntityDao.save(idGeneratorEntity);
-			UUID newId = idGeneratorEntity.getId();
+			Long newId = idGeneratorEntity.getId();
 			this.IdGeneratorEntityDao.deleteById(newId);
 
 			IdBoundary id = new IdBoundary(newId.toString());
