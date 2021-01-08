@@ -44,18 +44,22 @@ public class GetAllFieldsBySportAndDistanceHelper implements OperationHelper {
 		float distance = Float.parseFloat((String) operationAttributes.get("distance"));
 
 		List<ItemBoundary> fields = this.itemsDao
-				.findAllByActiveAndTypeAndLatBetweenAndLngBetween(true, "field", lat - distance, lat + distance,
+				.findAllByActiveAndTypeAndLatBetweenAndLngBetween(true, "sport_field", lat - distance, lat + distance,
 						lng - distance, lng + distance,
 						PageRequest.of(0, 100, Direction.DESC, "createdTimestamp", "itemId"))
 				.stream().map(this.itemConverter::toBoundary).collect(Collectors.toList());
 
-		for (ItemBoundary field : fields) {
-			List<ItemEntity> sports = this.itemsDao.findAllByActiveAndTypeAndNameAndParents_itemId(true, "sport",
-					sportName, field.getItemId().toString(),
-					PageRequest.of(0, 1, Direction.DESC, "createdTimestamp", "itemId"));
+		if (sportName.toLowerCase().equals("any")) {
+			rv = fields;
+		} else {
+			for (ItemBoundary field : fields) {
+				List<ItemEntity> sports = this.itemsDao.findAllByActiveAndTypeAndNameAndParents_itemId(true,
+						"sport_item", sportName, field.getItemId().toString(),
+						PageRequest.of(0, 1, Direction.DESC, "createdTimestamp", "itemId"));
 
-			if (!sports.isEmpty()) {
-				rv.add(field);
+				if (!sports.isEmpty()) {
+					rv.add(field);
+				}
 			}
 		}
 
