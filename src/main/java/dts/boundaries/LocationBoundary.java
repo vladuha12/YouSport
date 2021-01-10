@@ -1,38 +1,36 @@
 package dts.boundaries;
 
 public class LocationBoundary {
-	private String lat;
-	private String lag;
+	private float lat;
+	private float lng;
 
 	public LocationBoundary() {
-		this.lat = "32.115139";
-		this.lag = "34.817804";
 	}
 
-	public LocationBoundary(String lat, String lag) {
+	public LocationBoundary(float lat, float lng) {
 		super();
 		this.lat = lat;
-		this.lag = lag;
+		this.lng = lng;
 	}
 
-	public String getLat() {
+	public float getLat() {
 		return lat;
 	}
 
-	public void setLat(String lat) {
+	public void setLat(float lat) {
 		this.lat = lat;
 	}
 
-	public String getLag() {
-		return lag;
+	public float getLng() {
+		return lng;
 	}
 
-	public void setLag(String lag) {
-		this.lag = lag;
+	public void setLng(float lng) {
+		this.lng = lng;
 	}
-	
+
 	@Override
 	public String toString() {
-		return this.lat + "@" + this.lag;
+		return this.lat + "@" + this.lng;
 	}
 }

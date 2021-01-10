@@ -10,11 +10,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Service;
-
-import dts.boundaries.NewUserBoundary;
 import dts.boundaries.UserBoundary;
-import dts.boundaries.UserIdBoundary;
 import dts.data.UserEntity;
 import dts.data.UserRole;
 
@@ -47,10 +43,8 @@ public class UserServiceImplementation implements UsersService, CommandLineRunne
 	}
 
 	@Override
-	public UserBoundary createUser(NewUserBoundary newUser) {
-		UserIdBoundary userId = new UserIdBoundary(this.helperName, newUser.getEmail());
-		UserBoundary user = new UserBoundary(userId, newUser.getRole(), newUser.getUsername(), newUser.getAvatar());
-		UserEntity userEntity = this.userConverter.toEntity(user);
+	public UserBoundary createUser(UserBoundary newUser) {
+		UserEntity userEntity = this.userConverter.toEntity(newUser);
 
 		// MOCKUP database store of the entity
 		this.usersStore.put(userEntity.getUserId(), userEntity);

@@ -9,7 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -22,8 +21,9 @@ public class ItemEntity {
 	private String type;
 	private Date createdTimestamp;
 	private Boolean active;
-	private UserEntity createdBy;
-	private String location;
+	private String createdBy;
+	private float lat;
+	private float lng;
 	private String itemAttributes;
 	private Set<ItemEntity> children;
 	private Set<ItemEntity> parents;
@@ -31,8 +31,8 @@ public class ItemEntity {
 	public ItemEntity() {
 	}
 
-	public ItemEntity(String itemId, String name, String type, Date createdTimestamp, Boolean active,
-			UserEntity createdBy, String location, String itemAttributes) {
+	public ItemEntity(String itemId, String name, String type, Date createdTimestamp, Boolean active, String createdBy,
+			float lat, float lng, String itemAttributes) {
 		super();
 		this.itemId = itemId;
 		this.name = name;
@@ -40,7 +40,8 @@ public class ItemEntity {
 		this.createdTimestamp = createdTimestamp;
 		this.active = active;
 		this.createdBy = createdBy;
-		this.location = location;
+		this.lat = lat;
+		this.lng = lng;
 		this.itemAttributes = itemAttributes;
 	}
 
@@ -86,21 +87,28 @@ public class ItemEntity {
 		this.active = active;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	public UserEntity getCreatedBy() {
+	public String getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(UserEntity createdBy) {
+	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	public String getLocation() {
-		return location;
+	public float getLat() {
+		return lat;
 	}
 
-	public void setLocation(String location) {
-		this.location = location;
+	public void setLat(float lat) {
+		this.lat = lat;
+	}
+
+	public float getLng() {
+		return lng;
+	}
+
+	public void setLng(float lng) {
+		this.lng = lng;
 	}
 
 	@Lob

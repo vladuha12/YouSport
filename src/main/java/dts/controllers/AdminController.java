@@ -2,16 +2,17 @@ package dts.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dts.boundaries.OperationBoundary;
 import dts.boundaries.UserBoundary;
 import dts.logic.item.EnhancedItemsService;
 import dts.logic.operation.EnhancedOperationsService;
-import dts.logic.operation.OperationsService;
 import dts.logic.user.EnhancedUsersService;
 
 @RestController
@@ -37,6 +38,7 @@ public class AdminController {
 	}
 
 	// Delete All Users API
+	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(method = RequestMethod.DELETE, path = "/dts/admin/users/{adminSpace}/{adminEmail}")
 	public void deleteAllUsers(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail) {
@@ -45,6 +47,7 @@ public class AdminController {
 	}
 
 	// Delete All Items API
+	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(method = RequestMethod.DELETE, path = "/dts/admin/items/{adminSpace}/{adminEmail}")
 	public void deleteAllItems(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail) {
@@ -52,25 +55,33 @@ public class AdminController {
 	}
 
 	// Delete All Operations API
+	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(method = RequestMethod.DELETE, path = "/dts/admin/operations/{adminSpace}/{adminEmail}")
 	public void deleteAllOperations(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail) {
 		System.err.println("deleted All Operations By: " + adminEmail);
 	}
 
-	// Export All Users API (Example Create 7 users and return)
+	// Export All Users API
+	// Expanded with pagination
+	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/admin/users/{adminSpace}/{adminEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary[] exportAllUsers(@PathVariable("adminSpace") String adminSpace,
-			@PathVariable("adminEmail") String adminEmail) {
-
-		return userHandler.getAllUsers(adminSpace, adminEmail).toArray(new UserBoundary[0]);
+			@PathVariable("adminEmail") String adminEmail,
+			@RequestParam(name = "size", required = false, defaultValue = "50") int size,
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
+		return userHandler.getAllUsers(adminSpace, adminEmail, size, page).toArray(new UserBoundary[0]);
 	}
 
 	// Export All Operations API
+	// Expanded with pagination
+	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/admin/operations/{adminSpace}/{adminEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public OperationBoundary[] exportAllOperations(@PathVariable("adminSpace") String adminSpace,
-			@PathVariable("adminEmail") String adminEmail) throws Exception {
+			@PathVariable("adminEmail") String adminEmail,
+			@RequestParam(name = "size", required = false, defaultValue = "50") int size,
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page) throws Exception {
 
-		return operationsHandler.getAllOperations(adminSpace, adminEmail).toArray(new OperationBoundary[0]);
+		return operationsHandler.getAllOperations(adminSpace, adminEmail, size, page).toArray(new OperationBoundary[0]);
 	}
 }
