@@ -104,7 +104,7 @@ public class ItemController {
 	public void bindChild(@PathVariable("managerSpace") String managerSpace,
 			@PathVariable("managerEmail") String managerEmail, @PathVariable("itemSpace") String itemSpace,
 			@PathVariable("itemId") String itemId, @RequestBody ItemIdBoundary childItem) throws Exception {
-		itemsHandler.bind(managerSpace, managerEmail, itemSpace, itemId, childItem);
+		itemsHandler.bind(managerSpace, managerEmail, itemSpace, itemId, childItem, false);
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
