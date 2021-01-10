@@ -2,7 +2,6 @@ package dts.logic.operation;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -69,7 +68,7 @@ public class RdbOperationsService implements EnhancedOperationsService {
 			}
 
 			// Ensure the item exists and is active in db else - throw ObjNotFound
-			if (!type.equals("getAllFieldsBySportAndDistance")) {
+			if (!type.equals("getAllFieldsBySportAndDistance") && !type.equals("updateUserData")) {
 				ItemEntity targetItem = itemsDao.findByActiveAndItemId(true, operation.getItem().toString());
 				if (targetItem == null) {
 					throw new ObjNotFoundException("No such item");
