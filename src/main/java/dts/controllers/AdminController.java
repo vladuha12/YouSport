@@ -66,13 +66,12 @@ public class AdminController {
 	// Expanded with pagination
 	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/admin/users/{adminSpace}/{adminEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary[] exportAllUsers(
-			@PathVariable("adminSpace") String adminSpace,
+	public UserBoundary[] exportAllUsers(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail,
-			@RequestParam(name = "size", required = false, defaultValue = "15") int size,
-			@RequestParam(name = "page", required = false, defaultValue = "0") int page){
+			@RequestParam(name = "size", required = false, defaultValue = "50") int size,
+			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
 		System.err.println("new");
-		return userHandler.getAllUsers(adminSpace, adminEmail,size,page).toArray(new UserBoundary[0]);
+		return userHandler.getAllUsers(adminSpace, adminEmail, size, page).toArray(new UserBoundary[0]);
 	}
 
 	// Export All Operations API
@@ -81,7 +80,7 @@ public class AdminController {
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/admin/operations/{adminSpace}/{adminEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public OperationBoundary[] exportAllOperations(@PathVariable("adminSpace") String adminSpace,
 			@PathVariable("adminEmail") String adminEmail,
-			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "size", required = false, defaultValue = "50") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) throws Exception {
 
 		return operationsHandler.getAllOperations(adminSpace, adminEmail, size, page).toArray(new OperationBoundary[0]);
