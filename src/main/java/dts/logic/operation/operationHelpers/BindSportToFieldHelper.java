@@ -30,7 +30,7 @@ public class BindSportToFieldHelper implements OperationHelper {
 
 		itemsHandler.bind(operation.getInvokedBy().getUserId().getSpace(),
 				operation.getInvokedBy().getUserId().getEmail(), operation.getItem().getItemId().getSpace(),
-				operation.getItem().getItemId().getId(), childItemId);
+				operation.getItem().getItemId().getId(), childItemId, true);
 
 		return null;
 	}
