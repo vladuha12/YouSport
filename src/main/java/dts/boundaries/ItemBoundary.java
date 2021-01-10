@@ -15,15 +15,11 @@ public class ItemBoundary {
 	private Map<String, Object> itemAttributes;
 
 	public ItemBoundary() {
-
 		this.itemId = new IdBoundary();
 		this.active = true;
 		this.createdTimestamp = new Date();
 		this.location = new LocationBoundary();
 		this.itemAttributes = new HashMap<>();
-		// this.itemAttributes.put("key1", "key 1 test");
-		// this.itemAttributes.put("key2", 123456);
-
 	}
 
 	public ItemBoundary(String itemId) {
