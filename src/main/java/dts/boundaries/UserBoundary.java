@@ -11,8 +11,6 @@ public class UserBoundary {
 	public UserBoundary() {
 		this.userId = new UserIdBoundary();
 		this.role = UserRole.PLAYER;
-		// this.username = "Demo User";
-		// this.avatar = "ooOO_()OOoo";
 	}
 
 	public UserBoundary(UserIdBoundary userId, UserRole role, String username, String avatar) {

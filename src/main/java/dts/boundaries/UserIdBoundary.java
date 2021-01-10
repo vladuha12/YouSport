@@ -8,7 +8,7 @@ public class UserIdBoundary {
 
 	public UserIdBoundary() {
 		this.space = Application.APPLICATION_NAME;
-		this.email = "demo@maildomain.com";
+		this.email = "default@mail.com";
 	}
 
 	public UserIdBoundary(String space, String email) {
