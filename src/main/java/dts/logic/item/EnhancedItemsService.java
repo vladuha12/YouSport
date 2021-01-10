@@ -7,7 +7,8 @@ import dts.boundaries.ItemIdBoundary;
 
 public interface EnhancedItemsService extends ItemsService {
 
-	public void bind(String managerSpace, String managerEmail, String itemSpace, String itemId, ItemIdBoundary child);
+	public void bind(String managerSpace, String managerEmail, String itemSpace, String itemId, ItemIdBoundary child,
+			boolean bypassRole);
 
 	public List<ItemBoundary> getAll(String userSpace, String userEmail, int size, int page);
 

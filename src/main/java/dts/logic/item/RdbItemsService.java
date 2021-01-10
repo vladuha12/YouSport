@@ -51,10 +51,9 @@ public class RdbItemsService implements EnhancedItemsService {
 	public ItemBoundary create(String managerSpace, String managerEmail, ItemBoundary newItem) throws Exception {
 		try {
 			UserIdBoundary manager = new UserIdBoundary(managerSpace, managerEmail);
-			if (!RoleValidator.canUserPerformOperation(manager, UserRole.MANAGER,
-			usersDao)) {
+			if (!RoleValidator.canUserPerformOperation(manager, UserRole.MANAGER, usersDao)) {
 				throw new ForbiddenException("create item - Can only be performed by a MANAGER");
-			 }
+			}
 
 			ItemEntity entity = this.itemConverter.toEntity(newItem);
 			if (entity.getName() == null || entity.getName().trim().isEmpty()) {
@@ -74,8 +73,8 @@ public class RdbItemsService implements EnhancedItemsService {
 			entity.setItemId(id.toString());
 			entity.setCreatedTimestamp(new Date());
 
-			entity.setCreatedBy(newItem.getCreatedBy().toString());
-
+			UserIdBoundary createdBy = new UserIdBoundary(managerSpace, managerEmail);
+			entity.setCreatedBy(createdBy.toString());
 			return this.itemConverter.toBoundary(this.itemsDao.save(entity));
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
@@ -140,11 +139,11 @@ public class RdbItemsService implements EnhancedItemsService {
 				usersDao)) {
 			exiting = Optional.ofNullable(
 					this.itemsDao.findByActiveAndItemId(true, itemSpace + Application.ID_DELIMITER + itemId));
-		} else if(RoleValidator.canUserPerformOperation(new UserIdBoundary(userSpace, userEmail), UserRole.MANAGER,
+		} else if (RoleValidator.canUserPerformOperation(new UserIdBoundary(userSpace, userEmail), UserRole.MANAGER,
 				usersDao)) {
 			exiting = this.itemsDao.findById(itemSpace + Application.ID_DELIMITER + itemId);
-			
-		}else {
+
+		} else {
 			throw new ForbiddenException("Get item - Can only be performed by a PLAYER or a MANAGER");
 		}
 
@@ -158,20 +157,20 @@ public class RdbItemsService implements EnhancedItemsService {
 	@Override
 	@Transactional
 	public void deleteAll(String adminSpace, String adminEmail) {
-		 if (!RoleValidator.canUserPerformOperation(new UserIdBoundary(adminSpace,
-		 adminEmail), UserRole.ADMIN,
-		 usersDao)) {
-				throw new ForbiddenException("delete items - Can only be performed by a ADMIN");
-		 }
+		if (!RoleValidator.canUserPerformOperation(new UserIdBoundary(adminSpace, adminEmail), UserRole.ADMIN,
+				usersDao)) {
+			throw new ForbiddenException("delete items - Can only be performed by a ADMIN");
+		}
 		this.itemsDao.deleteAll();
 	}
 
 	@Override
 	@Transactional
-	public void bind(String managerSpace, String managerEmail, String itemSpace, String itemId, ItemIdBoundary child) {
+	public void bind(String managerSpace, String managerEmail, String itemSpace, String itemId, ItemIdBoundary child,
+			boolean bypassRole) {
 
-		if (!RoleValidator.canUserPerformOperation(new UserIdBoundary(managerSpace, managerEmail), UserRole.MANAGER,
-				usersDao)) {
+		if (!bypassRole && !RoleValidator.canUserPerformOperation(new UserIdBoundary(managerSpace, managerEmail),
+				UserRole.MANAGER, usersDao)) {
 			throw new ForbiddenException("update item - Can only be performed by a MANAGER");
 		}
 
@@ -232,8 +231,8 @@ public class RdbItemsService implements EnhancedItemsService {
 	public List<ItemBoundary> getAll(String userSpace, String userEmail, int size, int page) {
 
 		List<ItemBoundary> rv = this.itemsDao
-				.findAll(PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemId"))
-				.getContent().stream().map(this.itemConverter::toBoundary).collect(Collectors.toList());
+				.findAll(PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemId")).getContent().stream()
+				.map(this.itemConverter::toBoundary).collect(Collectors.toList());
 
 		if (RoleValidator.canUserPerformOperation(new UserIdBoundary(userSpace, userEmail), UserRole.MANAGER, usersDao))
 			return rv;
@@ -242,8 +241,7 @@ public class RdbItemsService implements EnhancedItemsService {
 				usersDao)) {
 			rv.removeIf(item -> (item.getActive() == false));
 			return rv;
-		}
-		else
+		} else
 			throw new ForbiddenException("Get all items - Can only be performed by a MANAGER / PLAYER");
 
 		// return this.itemsDao.findAll(PageRequest.of(page, size, Direction.DESC,

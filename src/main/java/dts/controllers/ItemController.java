@@ -34,7 +34,7 @@ public class ItemController {
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/items/{userSpace}/{userEmail}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary[] items(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail,
-			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "size", required = false, defaultValue = "50") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
 		return itemsHandler.getAll(userSpace, userEmail, size, page).toArray(new ItemBoundary[0]);
 	}
@@ -44,7 +44,7 @@ public class ItemController {
 	public ItemBoundary[] children(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail, @PathVariable("itemSpace") String itemSpace,
 			@PathVariable("itemId") String itemId,
-			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "size", required = false, defaultValue = "50") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
 		return itemsHandler.getChildren(userSpace, userEmail, itemSpace, itemId, size, page)
 				.toArray(new ItemBoundary[0]);
@@ -55,7 +55,7 @@ public class ItemController {
 	public ItemBoundary[] parents(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail, @PathVariable("itemSpace") String itemSpace,
 			@PathVariable("itemId") String itemId,
-			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "size", required = false, defaultValue = "50") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
 		return itemsHandler.getParents(userSpace, userEmail, itemSpace, itemId, size, page)
 				.toArray(new ItemBoundary[0]);
@@ -65,7 +65,7 @@ public class ItemController {
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/items/{userSpace}/{userEmail}/search/byNamePattern/{namePattern}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary[] searchByNamePattern(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail, @PathVariable("namePattern") String namePattern,
-			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "size", required = false, defaultValue = "50") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
 		return itemsHandler.getAllItemsByNamePattern(userSpace, userEmail, namePattern, size, page)
 				.toArray(new ItemBoundary[0]);
@@ -75,7 +75,7 @@ public class ItemController {
 	@RequestMapping(method = RequestMethod.GET, path = "/dts/items/{userSpace}/{userEmail}/search/byType/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary[] searchByType(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail, @PathVariable("type") String type,
-			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "size", required = false, defaultValue = "50") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
 		return itemsHandler.getAllItemsByType(userSpace, userEmail, type, size, page).toArray(new ItemBoundary[0]);
 	}
@@ -85,7 +85,7 @@ public class ItemController {
 	public ItemBoundary[] searchByNamePattern(@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String userEmail, @PathVariable("lat") float lat, @PathVariable("lng") float lng,
 			@PathVariable("distance") float distance,
-			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "size", required = false, defaultValue = "50") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
 		return itemsHandler.getAllItemsWithinRange(userSpace, userEmail, lat, lng, distance, size, page)
 				.toArray(new ItemBoundary[0]);
@@ -104,7 +104,7 @@ public class ItemController {
 	public void bindChild(@PathVariable("managerSpace") String managerSpace,
 			@PathVariable("managerEmail") String managerEmail, @PathVariable("itemSpace") String itemSpace,
 			@PathVariable("itemId") String itemId, @RequestBody ItemIdBoundary childItem) throws Exception {
-		itemsHandler.bind(managerSpace, managerEmail, itemSpace, itemId, childItem);
+		itemsHandler.bind(managerSpace, managerEmail, itemSpace, itemId, childItem, false);
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
