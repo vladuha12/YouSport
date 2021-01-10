@@ -73,8 +73,8 @@ public class RdbItemsService implements EnhancedItemsService {
 			entity.setItemId(id.toString());
 			entity.setCreatedTimestamp(new Date());
 
-			entity.setCreatedBy(newItem.getCreatedBy().toString());
-
+			UserIdBoundary createdBy = new UserIdBoundary(managerSpace, managerEmail);
+			entity.setCreatedBy(createdBy.toString());
 			return this.itemConverter.toBoundary(this.itemsDao.save(entity));
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());

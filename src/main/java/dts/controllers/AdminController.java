@@ -70,7 +70,6 @@ public class AdminController {
 			@PathVariable("adminEmail") String adminEmail,
 			@RequestParam(name = "size", required = false, defaultValue = "50") int size,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page) {
-		System.err.println("new");
 		return userHandler.getAllUsers(adminSpace, adminEmail, size, page).toArray(new UserBoundary[0]);
 	}
 
